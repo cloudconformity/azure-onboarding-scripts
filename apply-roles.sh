@@ -4,7 +4,7 @@
 set -e
 
 branch=master
-githubUri=https://raw.githubusercontent.com/cloudconformity/temp-azure-custom-policy/$branch
+githubUri=https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/$branch
 customRoleName="Custom Role - Cloud One Conformity"
 
 applicationId=
@@ -61,9 +61,9 @@ then
 
 	az deployment sub create \
 		--location eastus \
-		--template-uri "$githubUri/roleDefinition/create/deploy.json?token=AA3VCG22XUHYNHZAJYZY5NK7CUIZU" \
+		--template-uri "$githubUri/roleDefinition/create/deploy.json" \
 		--parameters \
-			"$githubUri/roleDefinition/create/deploy.parameters.json?token=AA3VCGZQX3XYND52RKPM3XK7CUIZW" \
+			"$githubUri/roleDefinition/create/deploy.parameters.json" \
 			roleName="$customRoleName" \
 			subscriptionIds="$prefixedSubscriptionIds"
 	echo "Custom role \"$customRoleName\" created"
@@ -95,7 +95,7 @@ then
 	az deployment sub create \
 		--location eastus \
 		--subscription="$subscriptionId" \
-		--template-uri "$githubUri/roleAssignment/customRoleDeploy.json?token=AA3VCG2ZHP6TA7EDRJFB27S7CUIXE" \
+		--template-uri "$githubUri/roleAssignment/customRoleDeploy.json" \
 		--parameters \
 			principalId="$principalId" \
 			roleDefinitionId="$roleDefinitionId" \
@@ -117,7 +117,7 @@ then
 	az deployment sub create \
 		--location eastus \
 		--subscription="$subscriptionId" \
-		--template-uri "$githubUri/roleAssignment/readerRoleDeploy.json?token=AA3VCG74RX4N3LJP3VNF7B27CUIXK" \
+		--template-uri "$githubUri/roleAssignment/readerRoleDeploy.json" \
 		--parameters \
 			principalId="$principalId" \
 			roleDefinitionId="$readerRoleId"
