@@ -4,7 +4,7 @@
 set -e
 
 branch=master
-githubUri=https://raw.githubusercontent.com/cloudconformity/temp-azure-custom-policy/$branch
+githubUri=https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/$branch
 customRoleName="Custom Role - Cloud One Conformity"
 
 applicationId=
