@@ -17,7 +17,7 @@ This new Custom role along with the built-in "Reader" role is applied to the sub
 2. Open a Cloud Shell bash terminal (For details, see [Cloud shell docs](https://docs.microsoft.com/azure/cloud-shell/overview)).
 3. Run the following
 ```bash
-curl -s https://raw.githubusercontent.com/cloudconformity/temp-azure-custom-policy/master/apply-roles.sh | bash /dev/stdin \
+curl -s https://raw.githubusercontent.com/cloudconformity/temp-azure-custom-policy/master/apply-roles | bash /dev/stdin \
     --application-id <App registration client id> \
     --subscription-id <Subscription id>
 ```
@@ -39,9 +39,13 @@ _Note: Both of these are available by default in the Azure Cloud Shell_.
 3. Locate the id of the App Registration that the custom role is to be applied to.
 4. In the same directory as the bash script run.
 ```bash
-bash apply-roles.sh \
+bash apply-roles \
     --application-id <App registration client id> \
     --subscription-id <Subscription id>
 ```
 `<App client id>` is the Application (client) ID of the App registration that CloudOne Conformity will be given access to.
 `<Subscription id>` is the id of the Subscription to apply the role and permissions to.
+
+## Contributing
+
+The code style of the shell script follows the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)

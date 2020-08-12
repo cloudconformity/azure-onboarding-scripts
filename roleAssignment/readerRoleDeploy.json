@@ -1,34 +1,34 @@
 {
-	"$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
-	"parameters": {
-		"principalId": {
-			"type": "string",
-			"metadata": {
-				"description": "principalId if the user that will be given contributor access to the resourceGroup"
-			}
-		},
-		"roleDefinitionId": {
-			"type": "string",
-			"defaultValue": "b24988ac-6180-42a0-ab88-20f7382dd24c",
-			"metadata": {
-				"description": "roleDefinition for the assignment - default is contributor"
-			}
-		}
-	},
-	"variables": {
-		"roleAssignmentName": "[guid(subscription().subscriptionId, parameters('principalId'), parameters('roleDefinitionId'))]",
-		"readerRoleGuid": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
-	},
-	"resources": [
-		{
-			"type": "Microsoft.Authorization/roleAssignments",
-			"apiVersion": "2020-03-01-preview",
-			"name": "[variables('roleAssignmentName')]",
-			"properties": {
-				"roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', variables('readerRoleGuid'))]",
-				"principalId": "[parameters('principalId')]"
-			}
-		}
-	]
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "principalId": {
+      "type": "string",
+      "metadata": {
+        "description": "principalId if the user that will be given contributor access to the resourceGroup"
+      }
+    },
+    "roleDefinitionId": {
+      "type": "string",
+      "defaultValue": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+      "metadata": {
+        "description": "roleDefinition for the assignment - default is contributor"
+      }
+    }
+  },
+  "variables": {
+    "roleAssignmentName": "[guid(subscription().subscriptionId, parameters('principalId'), parameters('roleDefinitionId'))]",
+    "readerRoleGuid": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-03-01-preview",
+      "name": "[variables('roleAssignmentName')]",
+      "properties": {
+        "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', variables('readerRoleGuid'))]",
+        "principalId": "[parameters('principalId')]"
+      }
+    }
+  ]
 }
