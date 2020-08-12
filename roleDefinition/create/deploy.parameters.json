@@ -1,26 +1,26 @@
 {
-	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-	"contentVersion": "1.0.0.0",
-	"parameters": {
-		"roleDescription": {
-			"value": "Subscription level custom role for Cloud Conformity access"
-		},
-		"actions": {
-			"value": [
-				"Microsoft.AppConfiguration/configurationStores/ListKeyValue/action",
-				"Microsoft.Network/networkWatchers/queryFlowLogStatus/action",
-				"Microsoft.Web/sites/config/list/action",
-				"Microsoft.Storage/storageAccounts/queueServices/queues/read"
-			]
-		},
-		"notActions": {
-			"value": []
-		},
-		"dataActions": {
-			"value": []
-		},
-		"notDataActions": {
-			"value": []
-		}
-	}
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "roleDescription": {
+      "value": "Subscription level custom role for Cloud Conformity access"
+    },
+    "actions": {
+      "value": [
+        "Microsoft.AppConfiguration/configurationStores/ListKeyValue/action",
+        "Microsoft.Network/networkWatchers/queryFlowLogStatus/action",
+        "Microsoft.Web/sites/config/list/action",
+        "Microsoft.Storage/storageAccounts/queueServices/queues/read"
+      ]
+    },
+    "notActions": {
+      "value": []
+    },
+    "dataActions": {
+      "value": []
+    },
+    "notDataActions": {
+      "value": []
+    }
+  }
 }
