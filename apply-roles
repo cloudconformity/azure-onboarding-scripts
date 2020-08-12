@@ -9,6 +9,11 @@ readonly BRANCH="master"
 readonly GITHUB_URI="https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/${BRANCH}"
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
 
+if [ ! -x "$(command -v jq)" ]; then
+  echo "Error: jq is required to be installed to run this script" >&2
+  exit 1
+fi
+
 application_id=
 subscription_id=
 
