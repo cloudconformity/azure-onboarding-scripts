@@ -17,7 +17,7 @@ This new Custom role along with the built-in "Reader" role is applied to the sub
 2. Open a Cloud Shell bash terminal (For details, see [Cloud shell docs](https://docs.microsoft.com/azure/cloud-shell/overview)).
 3. Run the following
 ```bash
-curl -s https://raw.githubusercontent.com/cloudconformity/temp-azure-custom-policy/master/apply-roles | bash /dev/stdin \
+curl -s https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/master/apply-roles | bash /dev/stdin \
     --application-id <App registration client id> \
     --subscription-id <Subscription id>
 ```
