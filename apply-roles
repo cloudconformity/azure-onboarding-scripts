@@ -9,40 +9,80 @@ readonly BRANCH="master"
 readonly GITHUB_URI="https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/${BRANCH}"
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
 
+create_custom_role() {
+  local subscription_ids_in_active_directory=("$@")
+  local prefixed_subscription_ids
+
+  echo "Creating custom \"${CUSTOM_ROLE_NAME}\" role definition"
+
+  # generate set of assignable scopes for the custom role
+  for subscription in "${subscription_ids_in_active_directory[@]}"; do
+    # prefix subscription id with "/subscriptions/" as is needed when added to the assignable scopes
+    prefixed_ids=("${prefixed_ids[@]}" "/subscriptions/${subscription}")
+  done
+
+  # convert bash array into a JSON array so can be passed to role creation
+  prefixed_subscription_ids=$(printf '%s\n' "${prefixed_ids[@]}" | jq -R . | jq -s .)
+
+  az deployment sub create \
+    --location eastus \
+    --template-uri "${GITHUB_URI}/roleDefinition/create/deploy.json" \
+    --parameters \
+    "${GITHUB_URI}/roleDefinition/create/deploy.parameters.json" \
+    roleName="${CUSTOM_ROLE_NAME}" \
+    subscriptionIds="${prefixed_subscription_ids}"
+
+  echo "Waiting for role to be searchable..."
+  sleep 10
+
+  custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
+
+  if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
+    echo "Error: Custom role creation failed"
+    exit 1
+  fi
+
+  echo "Custom \"${CUSTOM_ROLE_NAME}\" role definition created (${custom_role_definition_id})"
+}
+
 apply_roles_to_subscription() {
   local subscription_id="${1}"
+  local service_principal_id="${2}"
+  local is_custom_role_assigned
+  local is_reader_role_assigned
 
   echo "Checking custom role assignment for subscription - ${subscription_id}"
   is_custom_role_assigned=$(az role assignment list \
-    --role "${reader_role_id}" \
+    --role "${custom_role_definition_id}" \
     --subscription="${subscription_id}" \
-    --assignee "${principal_id}" \
+    --assignee "${service_principal_id}" \
     --query "[0].id" \
     --output tsv)
 
   if [[ -z "${is_custom_role_assigned}" ]] || [[ "${is_custom_role_assigned}" == "null" ]]; then
     echo "Assigning custom role to service principal"
+    echo "Custom role id - ${custom_role_definition_id}"
     az deployment sub create \
       --location eastus \
       --subscription="${subscription_id}" \
       --template-uri "${GITHUB_URI}/roleAssignment/customRoleDeploy.json" \
       --parameters \
-      principalId="${principal_id}" \
-      roleDefinitionId="${role_definition_id}" \
+      principalId="${service_principal_id}" \
+      roleDefinitionId="${custom_role_definition_id}" \
       subscriptionId="${subscription_id}"
-    echo "Custom role assigned to service principal"
   fi
 
-  echo "Custom role assigned"
+  echo "Custom role assigned to service principal"
 
   echo "Checking built-in \"Reader\" role assignment"
   # retrieve built-in "Reader" role
   reader_role_id=$(az role definition list --name Reader --query "[0].name" --output tsv)
+
   # check if role is already assigned
   is_reader_role_assigned=$(az role assignment list \
     --role "${reader_role_id}" \
     --subscription="${subscription_id}" \
-    --assignee "${principal_id}" \
+    --assignee "${service_principal_id}" \
     --query "[0].id" \
     --output tsv)
 
@@ -53,7 +93,7 @@ apply_roles_to_subscription() {
       --subscription="${subscription_id}" \
       --template-uri "${GITHUB_URI}/roleAssignment/readerRoleDeploy.json" \
       --parameters \
-      principalId="${principal_id}" \
+      principalId="${service_principal_id}" \
       roleDefinitionId="${reader_role_id}"
   fi
 
@@ -63,6 +103,8 @@ apply_roles_to_subscription() {
 main() {
   local application_id
   local subscription_id
+  local subscription_ids_in_active_directory
+  local service_principal_id
 
   if [ ! -x "$(command -v jq)" ]; then
     echo "Error: jq is required to be installed to run this script" >&2
@@ -90,58 +132,31 @@ main() {
   fi
 
   echo "Searching for existing custom \"${CUSTOM_ROLE_NAME}\" role definition"
-  role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
+  custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
 
   # retrieving Tenant id for Active Directory
   tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
 
-  # retrieve list of all subscriptions in the tenant and convert into a bash array
-  readarray -t subscription_ids < <(az account list --query "[?tenantId=='${tenant_id}'].id" --output tsv)
+  # retrieve list of all subscriptions in the Active Directory and convert into a bash array
+  readarray -t subscription_ids_in_active_directory < <(az account list --query "[?tenantId=='${tenant_id}'].id" --output tsv)
 
-  if [[ -z "${role_definition_id}" ]] || [[ "${role_definition_id}" == "null" ]]; then
+  if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
     echo "Custom role definition not found"
-    echo "Creating custom \"${CUSTOM_ROLE_NAME}\" role definition"
-
-    # generate set of assignable scopes for the custom role
-    for subscription in "${subscription_ids[@]}"; do
-      # prefix subscription id with "/subscriptions/" as is needed when added to the assignable scopes
-      prefixed_ids=("${prefixed_ids[@]}" "/subscriptions/${subscription}")
-    done
-
-    # convert bash array into a JSON array so can be passed to role creation
-    prefixed_subscription_ids=$(printf '%s\n' "${prefixed_ids[@]}" | jq -R . | jq -s .)
-
-    az deployment sub create \
-      --location eastus \
-      --template-uri "${GITHUB_URI}/roleDefinition/create/deploy.json" \
-      --parameters \
-      "${GITHUB_URI}/roleDefinition/create/deploy.parameters.json" \
-      roleName="${CUSTOM_ROLE_NAME}" \
-      subscriptionIds="${prefixed_subscription_ids}"
-    echo "Custom role \"${CUSTOM_ROLE_NAME}\" created"
-    echo "Waiting for role to be searchable..."
-    sleep 10
-
-    role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
-
-    if [[ -z "${role_definition_id}" ]] || [[ "${role_definition_id}" == "null" ]]; then
-      echo "Error: Custom role creation failed"
-      exit 1
-    fi
+    create_custom_role "${subscription_ids_in_active_directory[@]}"
   else
-    echo "Existing custom \"${CUSTOM_ROLE_NAME}\" role definition found"
+    echo "Existing custom \"${CUSTOM_ROLE_NAME}\" role definition found (${custom_role_definition_id})"
   fi
 
-  echo "Custom role id: ${role_definition_id}"
-
   # retrieve Service principal id
-  principal_id=$(az ad sp show --id "${application_id}" --query "objectId" --output tsv)
+  service_principal_id=$(az ad sp show --id "${application_id}" --query "objectId" --output tsv)
 
   if [[ -n "${subscription_id}" ]]; then
-    apply_roles_to_subscription "${subscription_id}"
+    # A subscription id was passed in so only apply to that subscription
+    apply_roles_to_subscription "${subscription_id}" "${service_principal_id}"
   else
-    for subscription in "${subscription_ids[@]}"; do
-      apply_roles_to_subscription "${subscription}"
+    # Apply to all subscriptions in Active Directory
+    for subscription in "${subscription_ids_in_active_directory[@]}"; do
+      apply_roles_to_subscription "${subscription}" "${service_principal_id}"
     done
   fi
 }
