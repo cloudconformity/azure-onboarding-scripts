@@ -60,6 +60,14 @@ _Note: Both of these are available by default in the Azure Cloud Shell._
 bash apply-roles --application-id <App registration client id>
 ```
 
+## Known limitations
+
+1. _Doesn't gracefully handle subscriptions with no permissions to update_
+
+   When running the script against all subscriptions in the Active Directory if there is a subscription which the user running
+the script doesn't have permissions to apply the roles to, the script will fail. Any subscriptions that were processed before
+this subscription will have the roles applied.
+
 ## Contributing
 
 The code style of the shell script follows the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
