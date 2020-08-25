@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Create and apply both Conformity custom access policy and Reader role to subscriptions
+# Create and apply the Cloud One Conformity custom role and Reader role to subscriptions
 
 # This will stop the script when an error is returned from any of the CLI commands
 set -e
@@ -9,9 +9,15 @@ readonly BRANCH="master"
 readonly GITHUB_URI="https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/${BRANCH}"
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
 
+check_for_custom_role_availability() {
+  echo "Checking if custom \"${CUSTOM_ROLE_NAME}\" role definition has been created..."
+  custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
+}
+
 create_custom_role() {
   local subscription_ids_in_active_directory=("$@")
   local prefixed_subscription_ids
+  local attempts_to_retrieve_role=0
 
   echo "Creating custom \"${CUSTOM_ROLE_NAME}\" role definition"
 
@@ -32,10 +38,12 @@ create_custom_role() {
     roleName="${CUSTOM_ROLE_NAME}" \
     subscriptionIds="${prefixed_subscription_ids}"
 
-  echo "Waiting for role to be searchable..."
-  sleep 10
-
-  custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
+  # It can take a bit of time for the role to be available to use so query until it is available
+  while [[ -z "${custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 5 ]]; do
+    sleep 5
+    attempts_to_retrieve_role=$((attempts_to_retrieve_role + 1))
+    check_for_custom_role_availability
+  done
 
   if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
     echo "Error: Custom role creation failed"
@@ -131,8 +139,7 @@ main() {
     exit 1
   fi
 
-  echo "Searching for existing custom \"${CUSTOM_ROLE_NAME}\" role definition"
-  custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
+  check_for_custom_role_availability
 
   # retrieving Tenant id for Active Directory
   tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
