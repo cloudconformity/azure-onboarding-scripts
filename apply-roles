@@ -162,3 +162,8 @@ main() {
 }
 
 main "$@"
+
+cat <<END
+
+The script has completed successfully
+END
