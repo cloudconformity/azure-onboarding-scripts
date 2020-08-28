@@ -34,7 +34,7 @@ _Note: Both of these are available by default in the Azure Cloud Shell_.
 
 #### Running the script
 1. Install Azure CLI ([Installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)).
-1. Download bash script to local machine from Github repo.
+1. Clone the Github repository or copy all the files to your local machine.
 2. Log into your Azure account using `az login`.
 3. Locate the id of the App Registration that the custom role is to be applied to.
 4. In the same directory as the bash script run.
