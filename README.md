@@ -1,73 +1,49 @@
-# Cloud One Conformity Azure onboarding scripts
+# Cloud One Conformity Azure Onboarding Scripts
+This script will help you integrate all your Azure subscriptions with Cloud One Conformity at once.
 
-Cloud One Conformity requires metadata about your Azure system to run all the rules.
-In order to retrieve this metadata, Cloud One Conformity requires you to apply some roles and permissions
-to your Azure account using the scripts in this repository to apply these roles and permissions.
+## Requirements
 
-## What does this script do?
-
-This script creates a new Custom role within the Active Directory that the App Registration resides in.
-
-This new Custom role along with the built-in "Reader" role is applied to either all the Subscriptions in the
-Active Directory or just the subscription that is specified.
+* Have a [Cloud One Conformity](https://www.trendmicro.com/en_us/business/products/hybrid-cloud/cloud-one-conformity.html) account. [Sign up a for free trial now](https://www.cloudconformity.com/identity/sign-up.html) if it's not already the case!
+* An Azure account with one or more subscriptions properly configured.
 
 ## Usage
 
-```bash
-bash apply-roles --application-id <App registration client id> [--subscription-id <subscription id>]
+First, you need to install the [Azure CLI Tool](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and authenticate the tool with your Azure Account, you can check how to do that on the official [Azure CLI Documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli): 
+
+To use the script, clone the repository to your machine and specify the name of the App Registration desired by executing the shell script file:
+
+
+```html
+[root@937cfabbc6f5 /]# ./azcli_conformity.sh 
+ 
+Which name do you want to give to your App Registration?
+myapp
+ 
+Hello, Thank you for trying this script out.
+We're configuring your Azure Account to work with Cloud One Conformity, this might take several minutes depending of how many subscriptions you have.
+ 
+Here the information that you'll need to use to finish the integration:
+ 
+Active Directory ID: 3e04753v-ae5c-42d4-a86b-d6f05460f9e4
+Application ID: edd722e9-6c81-40f5-9c5a-dafeddd003cd
+Application Secret :1102968C-2084-49D7-B71D-89B0DCB7D73E
 ```
 
-`--application-id`
+ **PS.: At the end of the script it will print all the information that you need to fill in Cloud One Conformity web console, make sure to store this information securely and never share this information with non-authorized personal!**
 
-The Application (client) ID of the App registration that Cloud One Conformity will be given access to.
-
-`--subscription-id` _Optional_
-
-The id of the Subscription to apply the role and permissions to.
-
-If not supplied then the access roles will be added to all the Subscriptions in the Active Directory the App
-Registration has been created within.
-
-## Running the script
-### Azure Portal Cloud Shell (Bash)
-
-1. Log in to the Azure portal using your credentials.
-2. Open a Cloud Shell bash terminal (For details, see [Cloud shell docs](https://docs.microsoft.com/azure/cloud-shell/overview)).
-3. Run the following
-```bash
-curl -s https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/master/apply-roles | bash /dev/stdin \
-    --application-id <App registration client id>
-```
-
-### On local terminal
-
-#### Pre-requisites
-1. Bash version >= 4
-2. [jq](https://stedolan.github.io/jq/)
-
-_Note: Both of these are available by default in the Azure Cloud Shell._
-
-#### Running the script
-1. Install Azure CLI ([Installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)).
-2. Log into your Azure account using `az login`.
-3. Clone the Github repository or copy all the files to your local machine.
-4. Make the following modifications to the bash script
-   1. Change the value of the `GITHUB_URI` variable to `"."`.
-   2. Rename all reference to the `--template-uri` parameter to `--template-file`.
-5. Locate the id of the App Registration that the custom role is to be applied to.
-6. In the same directory as the bash script run.
-```bash
-bash apply-roles --application-id <App registration client id>
-```
-
-## Known limitations
-
-1. _Doesn't gracefully handle subscriptions with no permissions to update_
-
-   When running the script against all subscriptions in the Active Directory if there is a subscription which the user running
-the script doesn't have permissions to apply the roles to, the script will fail. Any subscriptions that were processed before
-this subscription will have the roles applied.
+ To learn more about Azure integration with Cloud One Conformity, check the official [Documentation](https://cloudconformity.atlassian.net/wiki/spaces/HELP/pages/165806211/Adding+an+Active+Directory)
 
 ## Contributing
 
-The code style of the shell script follows the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
+If you encounter a bug, think of a useful feature, or find something confusing
+in the docs, please
+[Create a New Issue](https://github.com/cloudconformity/azure-onboarding-scripts/issues/new)!
+
+ **PS.: Make sure to use the [Issue Template](https://github.com/cloudconformity/azure-onboarding-scripts/tree/master/.github/ISSUE_TEMPLATE)**
+
+We :heart: pull requests. If you'd like to fix a bug, contribute to a feature or
+just correct a typo, please feel free to do so.
+
+If you're thinking of adding a new feature, consider opening an issue first to
+discuss it to ensure it aligns to the direction of the project (and potentially
+save yourself some time!).
