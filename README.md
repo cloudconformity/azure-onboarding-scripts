@@ -1,5 +1,10 @@
 # Cloud One Conformity Azure Onboarding Scripts
-This script will help you integrate all your Azure subscriptions with Cloud One Conformity at once.
+
+Cloud One Conformity requires metadata about your Azure system to run all the rules. In order to retrieve this metadata, Cloud One Conformity requires you to apply some roles and permissions to your Azure account using the scripts in this repository to apply these roles and permissions.
+
+## What does this script do?
+
+This script will help you integrate all your Azure subscriptions with Cloud One Conformity at once, by creating an App Registration and adding the necessary permissions. 
 
 ## Requirements
 
