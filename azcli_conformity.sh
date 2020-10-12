@@ -6,6 +6,7 @@ set -e
 # Define Variables for the Configurations
 export APP_SECRET=$(uuidgen)
 export CUSTOM_ROLE="Custom Role - Cloud One Conformity"
+
 # Ask User Input for the App Registration Name
 echo " "
 echo "Which name do you want to give to your App Registration?"

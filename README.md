@@ -18,7 +18,7 @@ First, you need to install the [Azure CLI Tool](https://docs.microsoft.com/en-us
 To use the script, clone the repository to your machine and specify the name of the App Registration desired by executing the shell script file:
 
 
-```html
+```shell script
 [root@937cfabbc6f5 /]# ./azcli_conformity.sh 
  
 Which name do you want to give to your App Registration?
