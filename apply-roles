@@ -36,7 +36,7 @@ create_custom_role() {
     --parameters \
     "${GITHUB_URI}/roleDefinition/create/deploy.parameters.json" \
     roleName="${CUSTOM_ROLE_NAME}" \
-    subscriptionIds="${prefixed_subscription_ids}"
+    subscriptionIds="${prefixed_subscription_ids}" > /dev/null
 
   # It can take a bit of time for the role to be available to use so query until it is available
   while [[ -z "${custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 5 ]]; do
@@ -76,7 +76,7 @@ apply_roles_to_subscription() {
       --parameters \
       principalId="${service_principal_id}" \
       roleDefinitionId="${custom_role_definition_id}" \
-      subscriptionId="${subscription_id}"
+      subscriptionId="${subscription_id}" > /dev/null
   fi
 
   echo "Custom role assigned to subscription"
@@ -101,7 +101,7 @@ apply_roles_to_subscription() {
       --template-uri "${GITHUB_URI}/roleAssignment/readerRoleDeploy.json" \
       --parameters \
       principalId="${service_principal_id}" \
-      roleDefinitionId="${reader_role_id}"
+      roleDefinitionId="${reader_role_id}" > /dev/null
   fi
 
   echo "\"Reader\" role assigned to subscription"
