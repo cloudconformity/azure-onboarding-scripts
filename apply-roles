@@ -68,8 +68,7 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_custom_role_assigned}" ]] || [[ "${is_custom_role_assigned}" == "null" ]]; then
-    echo "Assigning custom role to service principal"
-    echo "Custom role id - ${custom_role_definition_id}"
+    echo "Assigning custom role to subscription"
     az deployment sub create \
       --location eastus \
       --subscription="${subscription_id}" \
@@ -80,9 +79,9 @@ apply_roles_to_subscription() {
       subscriptionId="${subscription_id}"
   fi
 
-  echo "Custom role assigned to service principal"
+  echo "Custom role assigned to subscription"
 
-  echo "Checking built-in \"Reader\" role assignment"
+  echo "Checking built-in \"Reader\" role assignment for subscription - ${subscription_id}"
   # retrieve built-in "Reader" role
   reader_role_id=$(az role definition list --name Reader --query "[0].name" --output tsv)
 
@@ -95,7 +94,7 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_reader_role_assigned}" ]] || [[ "${is_reader_role_assigned}" == "null" ]]; then
-    echo "Assigning built-in \"Reader\" role to service principal"
+    echo "Assigning built-in \"Reader\" role to subscription"
     az deployment sub create \
       --location eastus \
       --subscription="${subscription_id}" \
@@ -105,7 +104,7 @@ apply_roles_to_subscription() {
       roleDefinitionId="${reader_role_id}"
   fi
 
-  echo "\"Reader\" role assigned"
+  echo "\"Reader\" role assigned to subscription"
 }
 
 main() {
@@ -139,6 +138,7 @@ main() {
     exit 1
   fi
 
+  # This will set a global variable if the custom role has been created
   check_for_custom_role_availability
 
   # retrieving Tenant id for Active Directory
