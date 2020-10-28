@@ -36,7 +36,7 @@ create_custom_role() {
     --parameters \
     "${GITHUB_URI}/roleDefinition/create/deploy.parameters.json" \
     roleName="${CUSTOM_ROLE_NAME}" \
-    subscriptionIds="${prefixed_subscription_ids}"
+    subscriptionIds="${prefixed_subscription_ids}" > /dev/null
 
   # It can take a bit of time for the role to be available to use so query until it is available
   while [[ -z "${custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 5 ]]; do
@@ -68,8 +68,7 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_custom_role_assigned}" ]] || [[ "${is_custom_role_assigned}" == "null" ]]; then
-    echo "Assigning custom role to service principal"
-    echo "Custom role id - ${custom_role_definition_id}"
+    echo "Assigning custom role to subscription"
     az deployment sub create \
       --location eastus \
       --subscription="${subscription_id}" \
@@ -77,12 +76,12 @@ apply_roles_to_subscription() {
       --parameters \
       principalId="${service_principal_id}" \
       roleDefinitionId="${custom_role_definition_id}" \
-      subscriptionId="${subscription_id}"
+      subscriptionId="${subscription_id}" > /dev/null
   fi
 
-  echo "Custom role assigned to service principal"
+  echo "Custom role assigned to subscription"
 
-  echo "Checking built-in \"Reader\" role assignment"
+  echo "Checking built-in \"Reader\" role assignment for subscription - ${subscription_id}"
   # retrieve built-in "Reader" role
   reader_role_id=$(az role definition list --name Reader --query "[0].name" --output tsv)
 
@@ -95,17 +94,17 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_reader_role_assigned}" ]] || [[ "${is_reader_role_assigned}" == "null" ]]; then
-    echo "Assigning built-in \"Reader\" role to service principal"
+    echo "Assigning built-in \"Reader\" role to subscription"
     az deployment sub create \
       --location eastus \
       --subscription="${subscription_id}" \
       --template-uri "${GITHUB_URI}/roleAssignment/readerRoleDeploy.json" \
       --parameters \
       principalId="${service_principal_id}" \
-      roleDefinitionId="${reader_role_id}"
+      roleDefinitionId="${reader_role_id}" > /dev/null
   fi
 
-  echo "\"Reader\" role assigned"
+  echo "\"Reader\" role assigned to subscription"
 }
 
 main() {
@@ -139,6 +138,7 @@ main() {
     exit 1
   fi
 
+  # This will set a global variable if the custom role has been created
   check_for_custom_role_availability
 
   # retrieving Tenant id for Active Directory
