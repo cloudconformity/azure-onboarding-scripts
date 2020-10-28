@@ -145,7 +145,11 @@ main() {
   tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
 
   # retrieve list of all subscriptions in the Active Directory and convert into a bash array
-  readarray -t subscription_ids_in_active_directory < <(az account list --query "[?tenantId=='${tenant_id}'].id" --output tsv)
+  subscription_ids_in_active_directory=()
+  # Bash v3 supported method of converting to an array ref: https://github.com/koalaman/shellcheck/wiki/SC2207
+  while IFS='' read -r line; do
+    subscription_ids_in_active_directory+=("$line");
+  done < <(az account list --query "[?tenantId=='${tenant_id}'].id" --output tsv)
 
   if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
     echo "Custom role definition not found"
