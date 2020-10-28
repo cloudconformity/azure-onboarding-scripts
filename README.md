@@ -42,10 +42,9 @@ curl -s https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scrip
 ### On local terminal
 
 #### Pre-requisites
-1. Bash version >= 4
 2. [jq](https://stedolan.github.io/jq/)
 
-_Note: Both of these are available by default in the Azure Cloud Shell._
+_Note: This is available by default in the Azure Cloud Shell._
 
 #### Running the script
 1. Install Azure CLI ([Installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)).
