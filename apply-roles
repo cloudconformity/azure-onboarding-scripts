@@ -95,14 +95,11 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_reader_role_assigned}" ]] || [[ "${is_reader_role_assigned}" == "null" ]]; then
-    echo "Assigning built-in \"Reader\" role to subscription"
-    az deployment sub create \
-      --location eastus \
-      --subscription="${subscription_id}" \
-      --template-uri "${GITHUB_URI}/roleAssignment/readerRoleDeploy.json" \
-      --parameters \
-      principalId="${service_principal_id}" \
-      roleDefinitionId="${reader_role_id}" > /dev/null
+    echo "  - Assigning built-in \"Reader\" role..."
+    az role assignment create \
+      --role Reader \
+      --assignee "${service_principal_id}" \
+      --subscription "${subscription_id}" > /dev/null
   fi
 
   echo "  - \"Reader\" role assigned"
