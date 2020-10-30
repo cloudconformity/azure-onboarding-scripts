@@ -10,7 +10,7 @@ readonly GITHUB_URI="https://raw.githubusercontent.com/cloudconformity/azure-onb
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
 
 check_for_custom_role_availability() {
-  echo "Checking if custom \"${CUSTOM_ROLE_NAME}\" role definition has been created..."
+  echo " - Checking if custom role definition has been created..."
   custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
 }
 
@@ -19,7 +19,7 @@ create_custom_role() {
   local prefixed_subscription_ids
   local attempts_to_retrieve_role=0
 
-  echo "Creating custom \"${CUSTOM_ROLE_NAME}\" role definition"
+  echo " - Creating custom role definition..."
 
   # generate set of assignable scopes for the custom role
   for subscription in "${subscription_ids_in_active_directory[@]}"; do
@@ -50,7 +50,7 @@ create_custom_role() {
     exit 1
   fi
 
-  echo "Custom \"${CUSTOM_ROLE_NAME}\" role definition created (${custom_role_definition_id})"
+  echo " - Custom role definition created (${custom_role_definition_id})"
 }
 
 apply_roles_to_subscription() {
@@ -133,11 +133,11 @@ main() {
     exit 1
   fi
 
-  # This will set a global variable if the custom role has been created
-  check_for_custom_role_availability
-
   # retrieving Tenant id for Active Directory
   tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
+
+  # ensure list of subscriptions is up to date with the server
+  az account list --refresh > /dev/null
 
   # retrieve list of all subscriptions in the Active Directory and convert into a bash array
   subscription_ids_in_active_directory=()
@@ -146,11 +146,16 @@ main() {
     subscription_ids_in_active_directory+=("$line");
   done < <(az account list --query "[?tenantId=='${tenant_id}'].id" --output tsv)
 
+  echo "Configuring custom \"${CUSTOM_ROLE_NAME}\" role definition:"
+
+  # This will set a global variable if the custom role has been created
+  check_for_custom_role_availability
+
   if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
-    echo "Custom role definition not found"
+    echo " - Custom role definition not found"
     create_custom_role "${subscription_ids_in_active_directory[@]}"
   else
-    echo "Existing custom \"${CUSTOM_ROLE_NAME}\" role definition found (${custom_role_definition_id})"
+    echo " - Existing custom role definition found (${custom_role_definition_id})"
   fi
 
   # retrieve Service principal id
