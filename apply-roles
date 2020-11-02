@@ -5,9 +5,14 @@
 # This will stop the script when an error is returned from any of the CLI commands
 set -e
 
-readonly BRANCH="master"
-readonly GITHUB_URI="https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scripts/${BRANCH}"
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
+
+# utility method to join arrays by the character passed in the first argument
+array_join() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
 
 check_for_custom_role_availability() {
   echo " - Checking if custom role definition has been created..."
@@ -16,27 +21,33 @@ check_for_custom_role_availability() {
 
 create_custom_role() {
   local subscription_ids_in_active_directory=("$@")
-  local prefixed_subscription_ids
   local attempts_to_retrieve_role=0
+  local assignable_scopes
 
   echo " - Creating custom role definition..."
 
   # generate set of assignable scopes for the custom role
   for subscription in "${subscription_ids_in_active_directory[@]}"; do
     # prefix subscription id with "/subscriptions/" as is needed when added to the assignable scopes
-    prefixed_ids=("${prefixed_ids[@]}" "/subscriptions/${subscription}")
+    prefixed_ids=("${prefixed_ids[@]}" "\"/subscriptions/${subscription}\"")
   done
 
-  # convert bash array into a JSON array so can be passed to role creation
-  prefixed_subscription_ids=$(printf '%s\n' "${prefixed_ids[@]}" | jq -R . | jq -s .)
+  assignable_scopes=$(array_join , "${prefixed_ids[@]}")
 
-  az deployment sub create \
-    --location eastus \
-    --template-uri "${GITHUB_URI}/roleDefinition/create/deploy.json" \
-    --parameters \
-    "${GITHUB_URI}/roleDefinition/create/deploy.parameters.json" \
-    roleName="${CUSTOM_ROLE_NAME}" \
-    subscriptionIds="${prefixed_subscription_ids}" > /dev/null
+  az role definition create \
+    --role-definition "{ \
+      \"Name\": \"${CUSTOM_ROLE_NAME}\", \
+      \"Description\": \"Subscription level custom role for Cloud Conformity access.\", \
+      \"Actions\": [ \
+         \"Microsoft.AppConfiguration/configurationStores/ListKeyValue/action\", \
+         \"Microsoft.Network/networkWatchers/queryFlowLogStatus/action\", \
+         \"Microsoft.Web/sites/config/list/Action\", \
+         \"Microsoft.Storage/storageAccounts/queueServices/queues/read\" \
+      ], \
+      \"DataActions\": [], \
+      \"NotDataActions\": [], \
+      \"AssignableScopes\":[${assignable_scopes}] \
+    }" >/dev/null
 
   # It can take a bit of time for the role to be available to use so query until it is available
   while [[ -z "${custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 5 ]]; do
@@ -74,7 +85,7 @@ apply_roles_to_subscription() {
     az role assignment create \
       --role "${custom_role_definition_id}" \
       --assignee "${service_principal_id}" \
-      --subscription "${subscription_id}" > /dev/null
+      --subscription "${subscription_id}" >/dev/null
   fi
 
   echo "  - Custom role assigned"
@@ -96,7 +107,7 @@ apply_roles_to_subscription() {
     az role assignment create \
       --role Reader \
       --assignee "${service_principal_id}" \
-      --subscription "${subscription_id}" > /dev/null
+      --subscription "${subscription_id}" >/dev/null
   fi
 
   echo "  - \"Reader\" role assigned"
@@ -107,11 +118,6 @@ main() {
   local subscription_id
   local subscription_ids_in_active_directory
   local service_principal_id
-
-  if [ ! -x "$(command -v jq)" ]; then
-    echo "Error: jq is required to be installed to run this script" >&2
-    exit 1
-  fi
 
   # capture CLI arguments
   while [ "${1}" != "" ]; do
@@ -137,13 +143,13 @@ main() {
   tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
 
   # ensure list of subscriptions is up to date with the server
-  az account list --refresh > /dev/null
+  az account list --refresh >/dev/null
 
   # retrieve list of all subscriptions in the Active Directory and convert into a bash array
   subscription_ids_in_active_directory=()
   # Bash v3 supported method of converting to an array ref: https://github.com/koalaman/shellcheck/wiki/SC2207
   while IFS='' read -r line; do
-    subscription_ids_in_active_directory+=("$line");
+    subscription_ids_in_active_directory+=("$line")
   done < <(az account list --query "[?tenantId=='${tenant_id}'].id" --output tsv)
 
   echo "Configuring custom \"${CUSTOM_ROLE_NAME}\" role definition:"

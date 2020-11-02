@@ -41,18 +41,10 @@ curl -s https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scrip
 
 ### On local terminal
 
-#### Pre-requisites
-2. [jq](https://stedolan.github.io/jq/)
-
-_Note: This is available by default in the Azure Cloud Shell._
-
 #### Running the script
 1. Install Azure CLI ([Installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)).
 2. Log into your Azure account using `az login`.
 3. Clone the Github repository or copy all the files to your local machine.
-4. Make the following modifications to the bash script
-   1. Change the value of the `GITHUB_URI` variable to `"."`.
-   2. Rename all reference to the `--template-uri` parameter to `--template-file`.
 5. Locate the id of the App Registration that the custom role is to be applied to.
 6. In the same directory as the bash script run.
 ```bash
