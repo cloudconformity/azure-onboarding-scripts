@@ -18,7 +18,7 @@ First, you need to install the [Azure CLI Tool](https://docs.microsoft.com/en-us
 To use the script, clone the repository to your machine and specify the name of the App Registration desired by executing the shell script file:
 
 
-```html
+```shell script
 [root@937cfabbc6f5 /]# ./azcli_conformity.sh 
  
 Which name do you want to give to your App Registration?
@@ -38,6 +38,20 @@ Application Secret :1102968C-2084-49D7-B71D-89B0DCB7D73E
 
  To learn more about Azure integration with Cloud One Conformity, check the official [Documentation](https://cloudconformity.atlassian.net/wiki/spaces/HELP/pages/165806211/Adding+an+Active+Directory)
 
+## Troubleshooting
+
+### Local Accounts Cached
+
+One of the most common issues that you may face it is when you logged with multiples accounts in the Azure CLI, it may cause some errors due to different permissions across these different accounts, to solve this you can run these commands before execute the script:
+
+```shell script
+# Erase the local account cache 
+[root@937cfabbc6f5 /]# az account clear
+
+# Login with Azure CLI to your tenant again
+[root@937cfabbc6f5 /]# az account login
+```
+
 ## Contributing
 
 If you encounter a bug, think of a useful feature, or find something confusing
@@ -52,3 +66,5 @@ just correct a typo, please feel free to do so.
 If you're thinking of adding a new feature, consider opening an issue first to
 discuss it to ensure it aligns to the direction of the project (and potentially
 save yourself some time!).
+
+The code style of the shell script follows the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
