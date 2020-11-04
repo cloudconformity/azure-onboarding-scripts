@@ -8,25 +8,35 @@ to your Azure account using the scripts in this repository to apply these roles 
 
 This script creates a new Custom role within the Active Directory that the App Registration resides in.
 
-This new Custom role along with the built-in "Reader" role is applied to either all the Subscriptions in the
+This new Custom role along with the built-in "Reader" role will be applied to either all the Subscriptions in the
 Active Directory or just the subscription that is specified.
 
 ## Usage
 
 ```bash
-bash apply-roles --application-id <App registration client id> [--subscription-id <subscription id>]
+bash apply-roles --application-id <App registration client id> [--subscription-id <subscription id>] [--update-role]
 ```
 
-`--application-id`
+`--application-id` / `-a`
 
 The Application (client) ID of the App registration that Cloud One Conformity will be given access to.
 
-`--subscription-id` _Optional_
+`--subscription-id` / `-s` _Optional_
 
 The id of the Subscription to apply the role and permissions to.
 
 If not supplied then the access roles will be added to all the Subscriptions in the Active Directory the App
 Registration has been created within.
+
+`--update-role` / `-u` _Optional_
+
+When passed the existing custom role will be updated.
+
+This is necessary when either:
+1. There has been updates to the permissions required for the custom role or;
+2. When new subscription(s) have been added to the Active Directory after the role has already been created.
+
+_Note: This requires the role to have been already created._
 
 ## Running the script
 ### Azure Portal Cloud Shell (Bash)
@@ -50,6 +60,35 @@ curl -s https://raw.githubusercontent.com/cloudconformity/azure-onboarding-scrip
 ```bash
 bash apply-roles --application-id <App registration client id>
 ```
+
+## Updating the role
+
+As Conformity adds and updates rules, we may require an update to the permissions the custom role you have set up on
+your Azure Account has.
+
+To update the role, make sure you have the latest version of the script, then run:
+```bash
+bash apply-roles --application-id <App registration client id> --update-role
+```
+
+_Note: This will only update the role and not attempt to assign the updated role to any new subscriptions._
+
+## Troubleshooting
+
+### Script fails when assigning the custom role to a new subscription
+
+If you get the following error when running the script:
+
+```
+The role Custom Role - Cloud One Conformity is not available for assignment at the requested scope.
+```
+
+This error is most commonly caused by the addition of a new subscription to the Active Directory after the custom role
+has been created.
+
+To resolve this you will need to [update the role](#updating-the-role) before you can assign it to the new subscription.
+Once the role has been updated wait a few minutes before you re-run the script as it can take a few minutes for
+the changes to be reflected in the Azure system.
 
 ## Known limitations
 
