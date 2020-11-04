@@ -19,12 +19,9 @@ check_for_custom_role_availability() {
   custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
 }
 
-create_custom_role() {
+generate_custom_role_definition() {
   local subscription_ids_in_active_directory=("$@")
-  local attempts_to_retrieve_role=0
   local assignable_scopes
-
-  echo " - Creating custom role definition..."
 
   # generate set of assignable scopes for the custom role
   for subscription in "${subscription_ids_in_active_directory[@]}"; do
@@ -34,8 +31,7 @@ create_custom_role() {
 
   assignable_scopes=$(array_join , "${prefixed_ids[@]}")
 
-  az role definition create \
-    --role-definition "{ \
+  echo "{ \
       \"Name\": \"${CUSTOM_ROLE_NAME}\", \
       \"Description\": \"Subscription level custom role for Cloud Conformity access.\", \
       \"Actions\": [ \
@@ -46,11 +42,24 @@ create_custom_role() {
       ], \
       \"DataActions\": [], \
       \"NotDataActions\": [], \
-      \"AssignableScopes\":[${assignable_scopes}] \
-    }" >/dev/null
+      \"AssignableScopes\": [${assignable_scopes}] \
+    }"
+}
+
+create_custom_role() {
+  local subscription_ids_in_active_directory=("$@")
+  local attempts_to_retrieve_role=0
+  local role_definition
+
+  echo " - Creating custom role definition..."
+
+  role_definition=$(generate_custom_role_definition "${subscription_ids_in_active_directory[@]}")
+
+  az role definition create \
+    --role-definition "${role_definition}" >/dev/null
 
   # It can take a bit of time for the role to be available to use so query until it is available
-  while [[ -z "${custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 5 ]]; do
+  while [[ -z "${custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 8 ]]; do
     sleep 5
     attempts_to_retrieve_role=$((attempts_to_retrieve_role + 1))
     check_for_custom_role_availability
@@ -62,6 +71,21 @@ create_custom_role() {
   fi
 
   echo " - Custom role definition created (${custom_role_definition_id})"
+}
+
+update_custom_role() {
+  local subscription_ids_in_active_directory=("$@")
+  local attempts_to_retrieve_role=0
+  local role_definition
+
+  echo " - Updating custom role definition..."
+
+  role_definition=$(generate_custom_role_definition "${subscription_ids_in_active_directory[@]}")
+
+  az role definition update \
+    --role-definition "${role_definition}" >/dev/null
+
+  echo " - Custom role definition updated (${custom_role_definition_id})"
 }
 
 apply_roles_to_subscription() {
@@ -118,6 +142,8 @@ main() {
   local subscription_id
   local subscription_ids_in_active_directory
   local service_principal_id
+  local UPDATE_ROLE
+  UPDATE_ROLE='false'
 
   # capture CLI arguments
   while [ "${1}" != "" ]; do
@@ -130,9 +156,13 @@ main() {
       shift
       subscription_id="${1}"
       ;;
+    -u | --update-role)
+      UPDATE_ROLE='true'
+      ;;
     esac
     shift
   done
+  readonly UPDATE_ROLE
 
   if [[ -z "${application_id}" ]]; then
     echo "Error: --application-id argument is required" >&2
@@ -156,6 +186,18 @@ main() {
 
   # This will set a global variable if the custom role has been created
   check_for_custom_role_availability
+
+  if [[ "${UPDATE_ROLE}" == 'true' ]]; then
+    if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
+      echo "Error: Failed to update role as custom role definition not found"
+      exit 0
+    fi
+
+    update_custom_role "${subscription_ids_in_active_directory[@]}"
+    echo "It may take the Azure system a few minutes to reflect the changes"
+    echo "Please wait a few minutes before attempting to apply the updated role to any new subscriptions"
+    exit 0
+  fi
 
   if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
     echo " - Custom role definition not found"
