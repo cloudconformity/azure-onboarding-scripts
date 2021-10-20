@@ -5,8 +5,110 @@
 # This will stop the script when an error is returned from any of the CLI commands
 set -e
 
+readonly DEFAULT_APP_REGISTRATION_NAME="Conformity Azure access"
+readonly APPLICATION_KEY_NAME="Conformity Key"
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
 
+option_error_and_exit() {
+  echo "Error: Answer doesn't match any option."
+  exit 1
+}
+
+get_application_id_of_default_app_registration() {
+  application_id=$(az ad app list --query "[?displayName == '${DEFAULT_APP_REGISTRATION_NAME}'].appId" --output tsv)
+}
+
+create_app_registration() {
+  local SKIP_KEY
+  local attempts_to_retrieve_application_id
+
+  SKIP_KEY='false'
+  attempts_to_retrieve_application_id=0
+
+  read -rp "Would you like to auto generate the Client secret key for your new App Registration (you can skip \"S\" this step) [Y|N|S]? " answer
+  case "${answer}" in
+  [yY] | [yY][eE][sS])
+    application_key_value=$(uuidgen) 2> /dev/null || read -rp "Failed to auto generate a secret key. Please enter the secret key manually: " application_key_value
+    ;;
+  [nN] | [nN][oO])
+    read -rp "Please enter the secret key for your new App Registration: " application_key_value
+    ;;
+  [sS] | [sK][kK][iI][pP])
+    SKIP_KEY='true'
+    application_key_value="None generated please create one manually via the Azure Portal."
+    echo "Your new App Registration will be created without a Client secret key. Please create one manually in the Azure Portal later."
+    ;;
+  *)
+    option_error_and_exit
+    ;;
+  esac
+
+  readonly SKIP_KEY
+
+  echo "App Registration:"
+
+  echo " - Creating App Registration..."
+
+  # create App Registration and add API permissions
+  if [[ "${SKIP_KEY}" == 'true' ]]; then
+    az ad app create \
+    --display-name "${DEFAULT_APP_REGISTRATION_NAME}" \
+    --required-resource-accesses @manifest.json > /dev/null
+  else
+    az ad app create \
+    --display-name "${DEFAULT_APP_REGISTRATION_NAME}" \
+    --password "${application_key_value}" \
+    --credential-description "${APPLICATION_KEY_NAME}" \
+    --required-resource-accesses @manifest.json > /dev/null
+  fi
+
+  echo " - Checking App Registration is created..."
+
+  # It can take a bit of time for the application to be available to use so query until it is available
+  while [[ -z "${application_id}" ]] && [[ attempts_to_retrieve_application_id -lt 8 ]]; do
+    sleep 5
+    attempts_to_retrieve_application_id=$((attempts_to_retrieve_application_id + 1))
+    get_application_id_of_default_app_registration
+  done
+
+  if [[ -z "${application_id}" ]] || [[ "${application_id}" == "null" ]]; then
+    echo "Error: Failed to create App registration."
+    exit 1
+  fi
+
+  echo " - App Registration has been successfully created."
+
+  echo " - Creating service principal..."
+
+  # create service principal
+  az ad sp create --id "${application_id}" > /dev/null
+
+  sleep 10
+
+  echo " - Granting admin consent to api permissions..."
+
+  # grant an admin-consent to newly created permissions
+  while true; do
+
+    # get the number of API permissions added
+    while IFS='' read -r line; do
+        permission_list+=("$line")
+    done < <(az ad app permission list --id "${application_id}" --output tsv)
+
+    permission_list_length=${#permission_list[@]}
+
+    # check if number of API permissions added are two
+    if [[ $permission_list_length -eq 2 ]]; then
+      # This is to enable the script to continue in case of an error
+      set +e
+      # in case of an error while granting admin consent the echo command will run instead
+      az ad app permission admin-consent --id "${application_id}" 2> /dev/null || echo "Error: Failed to grant admin consent to api permissions. Please grant it manually via the Azure Portal."
+      set -e
+      break
+    fi
+
+  done
+}
 # utility method to join arrays by the character passed in the first argument
 array_join() {
   local IFS="$1"
@@ -35,10 +137,10 @@ generate_custom_role_definition() {
       \"Name\": \"${CUSTOM_ROLE_NAME}\", \
       \"Description\": \"Subscription level custom role for Cloud Conformity access.\", \
       \"Actions\": [ \
-         \"Microsoft.AppConfiguration/configurationStores/ListKeyValue/action\", \
-         \"Microsoft.Network/networkWatchers/queryFlowLogStatus/action\", \
-         \"Microsoft.Web/sites/config/list/Action\", \
-         \"Microsoft.Storage/storageAccounts/queueServices/queues/read\" \
+          \"Microsoft.AppConfiguration/configurationStores/ListKeyValue/action\", \
+          \"Microsoft.Network/networkWatchers/queryFlowLogStatus/action\", \
+          \"Microsoft.Web/sites/config/list/Action\", \
+          \"Microsoft.Storage/storageAccounts/queueServices/queues/read\" \
       ], \
       \"DataActions\": [], \
       \"NotDataActions\": [], \
@@ -95,7 +197,9 @@ apply_roles_to_subscription() {
   local is_reader_role_assigned
 
   echo "- Subscription: ${subscription_id}"
+
   echo "  - Checking custom role assignment..."
+
   is_custom_role_assigned=$(az role assignment list \
     --role "${custom_role_definition_id}" \
     --subscription="${subscription_id}" \
@@ -115,6 +219,7 @@ apply_roles_to_subscription() {
   echo "  - Custom role assigned"
 
   echo "  - Checking built-in \"Reader\" role assignment..."
+
   # retrieve built-in "Reader" role
   reader_role_id=$(az role definition list --name Reader --query "[0].name" --output tsv)
 
@@ -142,31 +247,84 @@ main() {
   local subscription_id
   local subscription_ids_in_active_directory
   local service_principal_id
+  local CREATE_APP
   local UPDATE_ROLE
-  UPDATE_ROLE='false'
 
-  # capture CLI arguments
-  while [ "${1}" != "" ]; do
-    case "${1}" in
-    -a | --application-id)
-      shift
-      application_id="${1}"
-      ;;
-    -s | --subscription-id)
-      shift
-      subscription_id="${1}"
-      ;;
-    -u | --update-role)
+  UPDATE_ROLE='false'
+  CREATE_APP='false'
+
+  echo "This script will create the necessary resources for Cloud One Conformity to scan your Azure subscriptions."
+
+  read -rp "Would you like to use the default App Registration \"${DEFAULT_APP_REGISTRATION_NAME}\" [Y|N]? " answer
+  case "${answer}" in
+  [yY] | [yY][eE][sS])
+    echo "Checking if an App Registration with the name \"${DEFAULT_APP_REGISTRATION_NAME}\" exists..."
+    get_application_id_of_default_app_registration
+    if [[ -z "${application_id}" ]]; then
+      echo "App Registration \"${DEFAULT_APP_REGISTRATION_NAME}\" will be created as it wasn't found."
+      CREATE_APP='true'
+      create_app_registration
+    else
+      echo "App Registration \"${DEFAULT_APP_REGISTRATION_NAME}\" found."
+    fi
+    application_display_name=${DEFAULT_APP_REGISTRATION_NAME}
+    ;;
+  [nN] | [nN][oO])
+    while true; do
+      read -rp "Please type in the App Registration id (application id): " application_id
+      application_display_name=$(az ad app list --query "[?appId == '${application_id}'].displayName" --output tsv)
+      if [[ -n "${application_display_name}" ]]; then
+        echo "App Registration \"${application_display_name}\" found."
+        break
+      fi
+      echo "App Registration wasn't found. Please try again."
+    done
+    ;;
+  *)
+    option_error_and_exit
+    ;;
+  esac
+
+  readonly CREATE_APP
+
+  if [[ "${CREATE_APP}" == 'false' ]]; then
+    read -rp "Would you like to add new subscriptions to the assignable scopes of the custom role \"${CUSTOM_ROLE_NAME}\" [Y|N]? " answer
+    case "${answer}" in
+    [yY] | [yY][eE][sS])
       UPDATE_ROLE='true'
       ;;
+    [nN] | [nN][oO])
+      echo "Custom role \"${CUSTOM_ROLE_NAME}\" will not be applied to new subscriptions."
+      ;;
+    *)
+      option_error_and_exit
+      ;;
     esac
-    shift
-  done
+  fi
+
   readonly UPDATE_ROLE
 
-  if [[ -z "${application_id}" ]]; then
-    echo "Error: --application-id argument is required" >&2
-    exit 1
+  if [[ "${UPDATE_ROLE}" == 'false' ]]; then
+    read -rp "Would you like to apply \"${CUSTOM_ROLE_NAME}\" to a all subscriptions [Y|N]? " answer
+    case "${answer}" in
+    [yY] | [yY][eE][sS])
+      echo "\"${CUSTOM_ROLE_NAME}\" will be applied to all subscriptions."
+      ;;
+    [nN] | [nN][oO])
+      while true; do
+        read -rp "Please type in the subscription id: " subscription_id
+        subscription_name=$(az account list --query "[? id == '$subscription_id'].name" --output tsv)
+        if [[ -n "${subscription_name}" ]]; then
+          echo "Subscription \"${subscription_name}\" found."
+          break
+        fi
+        echo "Subscription wasn't found. Please type in the correct subscription id."
+      done
+      ;;
+    *)
+      option_error_and_exit
+      ;;
+    esac
   fi
 
   # retrieving Tenant id for Active Directory
@@ -177,6 +335,7 @@ main() {
 
   # retrieve list of all subscriptions in the Active Directory and convert into a bash array
   subscription_ids_in_active_directory=()
+
   # Bash v3 supported method of converting to an array ref: https://github.com/koalaman/shellcheck/wiki/SC2207
   while IFS='' read -r line; do
     subscription_ids_in_active_directory+=("$line")
@@ -220,6 +379,19 @@ main() {
       apply_roles_to_subscription "${subscription}" "${service_principal_id}"
     done
   fi
+
+  # display information about the newly created App Registration
+  echo "Finished."
+  echo " - Active Directory Tenant id: ${tenant_id}"
+  echo " - App Registration name: ${application_display_name}"
+  echo " - Application id: ${application_id}"
+  echo " - Custom role name: ${CUSTOM_ROLE_NAME}"
+
+  if [[ "${CREATE_APP}" == 'true' ]]; then
+    echo " - Application Secret key: ${application_key_value}"
+    echo "Please note that this is the only time the Application Secret key will be displayed."
+  fi
+
 }
 
 main "$@"
