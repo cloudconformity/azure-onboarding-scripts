@@ -32,7 +32,7 @@ create_app_registration() {
     --display-name "${DEFAULT_APP_REGISTRATION_NAME}" \
     --required-resource-accesses @manifest.json > /dev/null
 
-  echo " - Checking App Registration is created..."
+  echo " - Checking if App Registration has been created..."
 
   # It can take a bit of time for the application to be available to use so query until it is available
   while [[ -z "${application_id}" ]] && [[ attempts_to_retrieve_application_id -lt 8 ]]; do
