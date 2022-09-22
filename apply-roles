@@ -54,7 +54,7 @@ create_app_registration() {
   echo " - Creating service principal..."
 
   # create service principal
-  az ad sp create --id "${application_id}" > /dev/null
+  az ad sp create --id "${application_id}" >/dev/null
 
   # wait for service principle creation to be applied in the system
   sleep 18
@@ -66,7 +66,7 @@ create_app_registration() {
 
     # get the number of API permissions added
     while IFS='' read -r line; do
-        permission_list+=("$line")
+      permission_list+=("$line")
     done < <(az ad app permission list --id "${application_id}" --output tsv)
 
     permission_list_length=${#permission_list[@]}
@@ -76,12 +76,24 @@ create_app_registration() {
       # This is to enable the script to continue in case of an error
       set +e
       # in case of an error while granting admin consent the echo command will run instead
-      az ad app permission admin-consent --id "${application_id}" 2> /dev/null || echo "Error: Failed to grant admin consent to api permissions. Please grant it manually via the Azure Portal."
+      az ad app permission admin-consent --id "${application_id}" 2>/dev/null || echo "Error: Failed to grant admin consent to api permissions. Please grant it manually via the Azure Portal."
       set -e
       break
     fi
 
   done
+}
+
+remove_azure_graph_permission() {
+  az ad app permission delete \
+    --id 5778995a-e1bf-45b8-affa-663a9f3f4d04 \
+    --api 00000002-0000-0000-c000-000000000000
+  az ad app permission delete \
+    --id c582532d-9d9e-43bd-a97c-2667a28ce295 \
+    --api 00000002-0000-0000-c000-000000000000
+  az ad app permission delete \
+    --id 311a71cc-e848-46a1-bdf8-97ff7156d8e6 \
+    --api 00000002-0000-0000-c000-000000000000
 }
 # utility method to join arrays by the character passed in the first argument
 array_join() {
@@ -239,6 +251,7 @@ main() {
       CREATE_APP='true'
       create_app_registration
     else
+      remove_azure_graph_permission
       echo "App Registration \"${DEFAULT_APP_REGISTRATION_NAME}\" found."
     fi
     application_display_name=${DEFAULT_APP_REGISTRATION_NAME}
