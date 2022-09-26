@@ -242,6 +242,14 @@ apply_roles_to_subscription() {
   echo "  - \"Reader\" role assigned"
 }
 
+update_app_registrations_permissions() {
+  az ad app update \
+    --id "${application_id}" \
+    --required-resource-accesses @manifest.json >/dev/null
+
+    echo "The permissions for the \"${application_display_name}\" App Registration have been updated"
+}
+
 main() {
   local application_id
   local subscription_id
@@ -249,9 +257,11 @@ main() {
   local service_principal_id
   local CREATE_APP
   local UPDATE_ROLE
+  local UPDATE_PERMISSIONS
 
-  UPDATE_ROLE='false'
   CREATE_APP='false'
+  UPDATE_ROLE='false'
+  UPDATE_PERMISSIONS='false'
 
   echo "This script will create the necessary resources for Cloud One Conformity to scan your Azure subscriptions."
 
@@ -288,6 +298,25 @@ main() {
   readonly CREATE_APP
 
   if [[ "${CREATE_APP}" == 'false' ]]; then
+    read -rp "Would you like to update the permissions for the \"${application_display_name}\" App Registration [Y|N]? " answer
+    case "${answer}" in
+    [yY] | [yY][eE][sS])
+      UPDATE_PERMISSIONS='true'
+      ;;
+    *)
+      option_error_and_exit
+      ;;
+    esac
+
+    readonly UPDATE_PERMISSIONS
+
+    # update permission for the existing App
+    if [[ "${UPDATE_PERMISSIONS}" == 'true' ]]; then
+      update_app_registrations_permissions
+      echo "Finished."
+      exit 0
+    fi
+
     read -rp "Would you like to add new subscriptions to the assignable scopes of the custom role \"${CUSTOM_ROLE_NAME}\" [Y|N]? " answer
     case "${answer}" in
     [yY] | [yY][eE][sS])
@@ -349,12 +378,13 @@ main() {
   if [[ "${UPDATE_ROLE}" == 'true' ]]; then
     if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
       echo "Error: Failed to update role as custom role definition not found"
-      exit 0
+      exit 1
     fi
 
     update_custom_role "${subscription_ids_in_active_directory[@]}"
     echo "It may take the Azure system a few minutes to reflect the changes"
     echo "Please wait a few minutes before attempting to apply the updated role to any new subscriptions"
+    echo "Finished."
     exit 0
   fi
 
