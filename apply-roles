@@ -84,16 +84,32 @@ create_app_registration() {
   done
 }
 
-remove_azure_graph_permission() {
-  az ad app permission delete \
-    --id 5778995a-e1bf-45b8-affa-663a9f3f4d04 \
-    --api 00000002-0000-0000-c000-000000000000
-  az ad app permission delete \
-    --id c582532d-9d9e-43bd-a97c-2667a28ce295 \
-    --api 00000002-0000-0000-c000-000000000000
-  az ad app permission delete \
-    --id 311a71cc-e848-46a1-bdf8-97ff7156d8e6 \
-    --api 00000002-0000-0000-c000-000000000000
+update_azure_graph_permission() {
+  local UPDATE_PERMISSION
+
+  UPDATE_PERMISSION='false'
+
+  read -rp "Would you like to update the Azure Graph permission for your App Registration [Y|N]? " answer
+  case "${answer}" in
+  [yY] | [yY][eE][sS])
+    echo "Your App Registration Azure Graph permission will be updated."
+    ;;
+  [nN] | [nN][oO])
+    echo "Your App Registration Azure Graph permission will be kept as origin."
+    ;;
+  *)
+    option_error_and_exit
+    ;;
+  esac
+
+  readonly UPDATE_PERMISSION
+  # update Azure Graph permission for the existing App
+  if [[ "${UPDATE_PERMISSION}" == 'true' ]]; then
+    az ad app update \
+      --id "${application_id}" \
+      --required-resource-accesses @manifest.json >/dev/null
+  fi
+
 }
 # utility method to join arrays by the character passed in the first argument
 array_join() {
@@ -251,7 +267,7 @@ main() {
       CREATE_APP='true'
       create_app_registration
     else
-      remove_azure_graph_permission
+      update_azure_graph_permission
       echo "App Registration \"${DEFAULT_APP_REGISTRATION_NAME}\" found."
     fi
     application_display_name=${DEFAULT_APP_REGISTRATION_NAME}
