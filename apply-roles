@@ -84,32 +84,12 @@ create_app_registration() {
   done
 }
 
-update_azure_graph_permission() {
-  local UPDATE_PERMISSION
+update_app_registrations_permissions() {
+  az ad app update \
+    --id "${application_id}" \
+    --required-resource-accesses @manifest.json >/dev/null
 
-  UPDATE_PERMISSION='false'
-
-  read -rp "Would you like to update the Azure Graph permission for your App Registration [Y|N]? " answer
-  case "${answer}" in
-  [yY] | [yY][eE][sS])
-    echo "Your App Registration Azure Graph permission will be updated."
-    ;;
-  [nN] | [nN][oO])
-    echo "Your App Registration Azure Graph permission will be kept as origin."
-    ;;
-  *)
-    option_error_and_exit
-    ;;
-  esac
-
-  readonly UPDATE_PERMISSION
-  # update Azure Graph permission for the existing App
-  if [[ "${UPDATE_PERMISSION}" == 'true' ]]; then
-    az ad app update \
-      --id "${application_id}" \
-      --required-resource-accesses @manifest.json >/dev/null
-  fi
-
+  echo "The permissions for the \"${application_display_name}\" App Registration have been updated"
 }
 # utility method to join arrays by the character passed in the first argument
 array_join() {
@@ -253,6 +233,7 @@ main() {
   local UPDATE_ROLE
 
   UPDATE_ROLE='false'
+  UPDATE_PERMISSIONS='false'
   CREATE_APP='false'
 
   echo "This script will create the necessary resources for Cloud One Conformity to scan your Azure subscriptions."
@@ -291,6 +272,25 @@ main() {
   readonly CREATE_APP
 
   if [[ "${CREATE_APP}" == 'false' ]]; then
+    read -rp "Would you like to update the permissions for the \"${application_display_name}\" App Registration [Y|N]? " answer
+    case "${answer}" in
+    [yY] | [yY][eE][sS])
+      UPDATE_PERMISSIONS='true'
+      ;;
+    *)
+      option_error_and_exit
+      ;;
+    esac
+
+    readonly UPDATE_PERMISSIONS
+
+    # update permission for the existing App
+    if [[ "${UPDATE_PERMISSIONS}" == 'true' ]]; then
+      update_app_registrations_permissions
+      echo "Finished."
+      exit 0
+    fi
+
     read -rp "Would you like to add new subscriptions to the assignable scopes of the custom role \"${CUSTOM_ROLE_NAME}\" [Y|N]? " answer
     case "${answer}" in
     [yY] | [yY][eE][sS])
@@ -352,12 +352,13 @@ main() {
   if [[ "${UPDATE_ROLE}" == 'true' ]]; then
     if [[ -z "${custom_role_definition_id}" ]] || [[ "${custom_role_definition_id}" == "null" ]]; then
       echo "Error: Failed to update role as custom role definition not found"
-      exit 0
+      exit 1
     fi
 
     update_custom_role "${subscription_ids_in_active_directory[@]}"
     echo "It may take the Azure system a few minutes to reflect the changes"
     echo "Please wait a few minutes before attempting to apply the updated role to any new subscriptions"
+    echo "Finished."
     exit 0
   fi
 
