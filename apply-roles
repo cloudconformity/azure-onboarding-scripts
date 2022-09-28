@@ -301,7 +301,7 @@ main() {
   fi
 
   # retrieving Tenant id for Active Directory
-  tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
+  tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerOrganizationId" --output tsv)
 
   # ensure list of subscriptions is up to date with the server
   az account list --refresh >/dev/null
