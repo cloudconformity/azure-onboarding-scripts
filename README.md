@@ -15,7 +15,7 @@ The script can also create a new App Registration to apply these permissions whi
 
 ### Minimum Azure CLI version
 
-The version of Azure CLI used to run the script must be `2.37.0` or higher
+The version of Azure CLI used to run the script must be `2.40.0` or higher
 
 ## Usage
 

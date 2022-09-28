@@ -56,7 +56,8 @@ create_app_registration() {
   # create service principal
   az ad sp create --id "${application_id}" > /dev/null
 
-  sleep 10
+  # wait for service principle creation to be applied in the system
+  sleep 18
 
   echo " - Granting admin consent to api permissions..."
 
