@@ -11,7 +11,11 @@ This script creates a new Custom role "Custom Role - Cloud One Conformity" withi
 This new Custom role along with the built-in "Reader" role will be applied to either all the Subscriptions in the
 Active Directory or just the subscription that is specified.
 
-The script can also be used to create a new App Registration with the default name "Conformity Azure access".
+The script can also create a new App Registration to apply these permissions which can be used to allow Conformity to access to your Azure instance.
+
+### Minimum Azure CLI version
+
+The version of Azure CLI used to run the script must be `2.40.0` or higher
 
 ## Usage
 
@@ -27,9 +31,11 @@ Cloud One Conformity is granted read-only access to your Azure Active Directory 
 If you choose to use the "Conformity Azure access" App Registration, and it hasn't been created before, the script with automatically create it and add
 the required API permissions for Conformity to run the rule checks.
 
-While creating your new "Conformity Azure access" App Registration, the script will prompt you to automatically generate a Client secret key. You can
-choose to auto generate the Client secret key or to manually type in your own. You can also completely skip this step and manually create Client secret
-key in Azure portal later.
+The script will automatically generate a Client secret key for the created App Registration. This Client secret key will be displayed when the script has completed.
+
+This is the only time this secret will be displayed so please store in a secure location for use while setting up your account in Conformity.
+
+_Note: This Client secret key can be revoked and/or new Client secret keys can be generated through the Azure Portal._
 
 ### Adding new subscriptions to the assignable scopes of the custom role
 

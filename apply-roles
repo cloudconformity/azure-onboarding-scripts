@@ -15,54 +15,24 @@ option_error_and_exit() {
 }
 
 get_application_id_of_default_app_registration() {
-  application_id=$(az ad app list --query "[?displayName == '${DEFAULT_APP_REGISTRATION_NAME}'].appId" --output tsv)
+  application_id=$(az ad app list --query "[?displayName == to_string('${DEFAULT_APP_REGISTRATION_NAME}')].appId" --output tsv)
 }
 
 create_app_registration() {
-  local SKIP_KEY
   local attempts_to_retrieve_application_id
 
-  SKIP_KEY='false'
   attempts_to_retrieve_application_id=0
-
-  read -rp "Would you like to auto generate the Client secret key for your new App Registration (you can skip \"S\" this step) [Y|N|S]? " answer
-  case "${answer}" in
-  [yY] | [yY][eE][sS])
-    application_key_value=$(uuidgen) 2> /dev/null || read -rp "Failed to auto generate a secret key. Please enter the secret key manually: " application_key_value
-    ;;
-  [nN] | [nN][oO])
-    read -rp "Please enter the secret key for your new App Registration: " application_key_value
-    ;;
-  [sS] | [sK][kK][iI][pP])
-    SKIP_KEY='true'
-    application_key_value="None generated please create one manually via the Azure Portal."
-    echo "Your new App Registration will be created without a Client secret key. Please create one manually in the Azure Portal later."
-    ;;
-  *)
-    option_error_and_exit
-    ;;
-  esac
-
-  readonly SKIP_KEY
 
   echo "App Registration:"
 
   echo " - Creating App Registration..."
 
   # create App Registration and add API permissions
-  if [[ "${SKIP_KEY}" == 'true' ]]; then
-    az ad app create \
+  az ad app create \
     --display-name "${DEFAULT_APP_REGISTRATION_NAME}" \
     --required-resource-accesses @manifest.json > /dev/null
-  else
-    az ad app create \
-    --display-name "${DEFAULT_APP_REGISTRATION_NAME}" \
-    --password "${application_key_value}" \
-    --credential-description "${APPLICATION_KEY_NAME}" \
-    --required-resource-accesses @manifest.json > /dev/null
-  fi
 
-  echo " - Checking App Registration is created..."
+  echo " - Checking if App Registration has been created..."
 
   # It can take a bit of time for the application to be available to use so query until it is available
   while [[ -z "${application_id}" ]] && [[ attempts_to_retrieve_application_id -lt 8 ]]; do
@@ -78,12 +48,16 @@ create_app_registration() {
 
   echo " - App Registration has been successfully created."
 
+  echo " - Generating Application Secret key for App registration."
+  application_key_value=$(az ad app credential reset --id "${application_id}" --display-name "${APPLICATION_KEY_NAME}" --query "password" --output tsv)
+
   echo " - Creating service principal..."
 
   # create service principal
   az ad sp create --id "${application_id}" > /dev/null
 
-  sleep 10
+  # wait for service principle creation to be applied in the system
+  sleep 18
 
   echo " - Granting admin consent to api permissions..."
 
@@ -328,7 +302,7 @@ main() {
   fi
 
   # retrieving Tenant id for Active Directory
-  tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerTenantId" --output tsv)
+  tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerOrganizationId" --output tsv)
 
   # ensure list of subscriptions is up to date with the server
   az account list --refresh >/dev/null
@@ -366,7 +340,7 @@ main() {
   fi
 
   # retrieve Service principal id
-  service_principal_id=$(az ad sp show --id "${application_id}" --query "objectId" --output tsv)
+  service_principal_id=$(az ad sp show --id "${application_id}" --query "id" --output tsv)
 
   if [[ -n "${subscription_id}" ]]; then
     echo "Assigning roles to subscription:"
