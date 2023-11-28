@@ -8,6 +8,7 @@ set -e
 readonly DEFAULT_APP_REGISTRATION_NAME="Conformity Azure access"
 readonly APPLICATION_KEY_NAME="Conformity Key"
 readonly CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity"
+readonly TENANT_CUSTOM_ROLE_NAME="Custom Role - Cloud One Conformity (Tenant scope)"
 
 option_error_and_exit() {
   echo "Error: Answer doesn't match any option."
@@ -95,6 +96,11 @@ check_for_custom_role_availability() {
   custom_role_definition_id=$(az role definition list --name "${CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
 }
 
+check_for_tenant_custom_role_availability() {
+  echo " - Checking if tenant scope custom role definition has been created..."
+  tenant_custom_role_definition_id=$(az role definition list --name "${TENANT_CUSTOM_ROLE_NAME}" --query "[0].name" --output tsv)
+}
+
 generate_custom_role_definition() {
   local subscription_ids_in_active_directory=("$@")
   local assignable_scopes
@@ -115,6 +121,24 @@ generate_custom_role_definition() {
           \"Microsoft.Network/networkWatchers/queryFlowLogStatus/action\", \
           \"Microsoft.Web/sites/config/list/Action\", \
           \"Microsoft.Storage/storageAccounts/queueServices/queues/read\" \
+      ], \
+      \"DataActions\": [], \
+      \"NotDataActions\": [], \
+      \"AssignableScopes\": [${assignable_scopes}] \
+    }"
+}
+
+generate_tenant_custom_role_definition() {
+  local tenant_id="${1}"
+  local assignable_scopes
+
+  assignable_scopes=$(array_join , "${tenant_id}")
+
+  echo "{ \
+      \"Name\": \"${TENANT_CUSTOM_ROLE_NAME}\", \
+      \"Description\": \"Tenant level custom role for Cloud Conformity access.\", \
+      \"Actions\": [ \
+          \"Microsoft.Management/managementGroups/read\" \
       ], \
       \"DataActions\": [], \
       \"NotDataActions\": [], \
@@ -147,6 +171,33 @@ create_custom_role() {
   fi
 
   echo " - Custom role definition created (${custom_role_definition_id})"
+}
+
+create_tenant_custom_role() {
+  local tenant_id="${1}"
+  local attempts_to_retrieve_role=0
+  local role_definition
+
+  echo " - Creating tenant scope custom role definition..."
+
+  role_definition=$(generate_tenant_custom_role_definition "${tenant_id}")
+
+  az role definition create \
+    --role-definition "${role_definition}" >/dev/null
+
+  # It can take a bit of time for the role to be available to use so query until it is available
+  while [[ -z "${tenant_custom_role_definition_id}" ]] && [[ attempts_to_retrieve_role -lt 8 ]]; do
+    sleep 5
+    attempts_to_retrieve_role=$((attempts_to_retrieve_role + 1))
+    check_for_tenant_custom_role_availability
+  done
+
+  if [[ -z "${tenant_custom_role_definition_id}" ]] || [[ "${tenant_custom_role_definition_id}" == "null" ]]; then
+    echo "Error: Tenant scope Custom role creation failed"
+    exit 1
+  fi
+
+  echo " - Tenant scope Custom role definition created (${tenant_custom_role_definition_id})"
 }
 
 update_custom_role() {
@@ -216,6 +267,33 @@ apply_roles_to_subscription() {
   echo "  - \"Reader\" role assigned"
 }
 
+apply_tenant_custom_role_to_tenant() {
+  local tenant_id="${1}"
+  local is_tenant_custom_role_assigned
+
+  echo "- Tenant: ${tenant_id}"
+
+  echo "  - Checking tenant scope custom role assignment..."
+
+  is_tenant_custom_role_assigned=$(az role assignment list \
+    --role "${tenant_custom_role_definition_id}" \
+    --scope "${tenant_id}" \
+    --assignee "${service_principal_id}" \
+    --query "[0].id" \
+    --output tsv)
+
+  if [[ -z "${is_tenant_custom_role_assigned}" ]] || [[ "${is_tenant_custom_role_assigned}" == "null" ]]; then
+    echo "  - Assigning tenant scope custom role..."
+
+    az role assignment create \
+      --role "${tenant_custom_role_definition_id}" \
+      --assignee "${service_principal_id}" \
+      --scope "${tenant_id}" >/dev/null
+  fi
+
+  echo "  - Tenant scope Custom role assigned"
+}
+
 main() {
   local application_id
   local subscription_id
@@ -223,9 +301,12 @@ main() {
   local service_principal_id
   local CREATE_APP
   local UPDATE_ROLE
+  local UPSERT_TENANT_ROLE
 
-  UPDATE_ROLE='false'
   CREATE_APP='false'
+  UPDATE_ROLE='false'
+  APPLY_ROLE='false'
+  UPSERT_TENANT_ROLE='false'
 
   echo "This script will create the necessary resources for Cloud One Conformity to scan your Azure subscriptions."
 
@@ -279,27 +360,53 @@ main() {
   readonly UPDATE_ROLE
 
   if [[ "${UPDATE_ROLE}" == 'false' ]]; then
-    read -rp "Would you like to apply \"${CUSTOM_ROLE_NAME}\" to a all subscriptions [Y|N]? " answer
+    read -rp "Would you like to apply \"${CUSTOM_ROLE_NAME}\" to all subscriptions [Y|N]? " answer
     case "${answer}" in
     [yY] | [yY][eE][sS])
+      APPLY_ROLE='true'
       echo "\"${CUSTOM_ROLE_NAME}\" will be applied to all subscriptions."
       ;;
     [nN] | [nN][oO])
-      while true; do
-        read -rp "Please type in the subscription id: " subscription_id
-        subscription_name=$(az account list --query "[? id == '$subscription_id'].name" --output tsv)
-        if [[ -n "${subscription_name}" ]]; then
-          echo "Subscription \"${subscription_name}\" found."
-          break
-        fi
-        echo "Subscription wasn't found. Please type in the correct subscription id."
-      done
+      read -rp "Would you like to apply \"${CUSTOM_ROLE_NAME}\" to specific subscription [Y|N]? " answer
+      case "${answer}" in
+      [yY] | [yY][eE][sS])
+        APPLY_ROLE='true'
+        while true; do
+          read -rp "Please type in the subscription id: " subscription_id
+          subscription_name=$(az account list --query "[? id == '$subscription_id'].name" --output tsv)
+          if [[ -n "${subscription_name}" ]]; then
+            echo "Subscription \"${subscription_name}\" found."
+            break
+          fi
+          echo "Subscription wasn't found. Please type in the correct subscription id."
+        done
+        ;;
+      [nN] | [nN][oO])
+        ;;
+      *)
+        option_error_and_exit
+        ;;
+      esac
       ;;
     *)
       option_error_and_exit
       ;;
     esac
   fi
+
+  read -rp "Would you like to apply \"${TENANT_CUSTOM_ROLE_NAME}\" to tenant scope [Y|N]? " answer
+  case "${answer}" in
+  [yY] | [yY][eE][sS])
+    UPDATE_TENANT_ROLE='true'
+    echo "\"${TENANT_CUSTOM_ROLE_NAME}\" will be applied to the root tenant."
+    ;;
+  [nN] | [nN][oO])
+    echo "\"${TENANT_CUSTOM_ROLE_NAME}\" will not be applied to the root tenant."
+    ;;
+  *)
+    option_error_and_exit
+    ;;
+  esac
 
   # retrieving Tenant id for Active Directory
   tenant_id=$(az ad sp show --id "${application_id}" --query "appOwnerOrganizationId" --output tsv)
@@ -342,7 +449,7 @@ main() {
   # retrieve Service principal id
   service_principal_id=$(az ad sp show --id "${application_id}" --query "id" --output tsv)
 
-  if [[ -n "${subscription_id}" ]]; then
+  if [[ "${APPLY_ROLE}" == 'true' ]] && [[ -n "${subscription_id}" ]]; then
     echo "Assigning roles to subscription:"
     # A subscription id was passed in so only apply to that subscription
     apply_roles_to_subscription "${subscription_id}" "${service_principal_id}"
@@ -354,12 +461,30 @@ main() {
     done
   fi
 
+  if [[ "${UPSERT_TENANT_ROLE}" == 'true' ]]; then
+    echo "Configuring custom \"${TENANT_CUSTOM_ROLE_NAME}\" role definition:"
+
+    # This will set a global variable if the tenant custom role has been created
+    check_for_tenant_custom_role_availability
+
+    if [[ -z "${tenant_custom_role_definition_id}" ]] || [[ "${tenant_custom_role_definition_id}" == "null" ]]; then
+      echo " - Tenant scope Custom role definition not found"
+      create_tenant_custom_role "${tenant_id}"
+    fi
+
+    # Assing tenant scope custom role to service principal id
+    apply_tenant_custom_role_to_service_principal "${tenant_id}" "${service_principal_id}"
+  fi
+
   # display information about the newly created App Registration
   echo "Finished."
   echo " - Active Directory Tenant id: ${tenant_id}"
   echo " - App Registration name: ${application_display_name}"
   echo " - Application id: ${application_id}"
-  echo " - Custom role name: ${CUSTOM_ROLE_NAME}"
+  echo " - Custom role name (Subscription scope): ${CUSTOM_ROLE_NAME}"
+  if [[ "${UPSERT_TENANT_ROLE}" == 'true' ]]; then
+    echo " - Custom role name (Tenant scope): ${TENANT_CUSTOM_ROLE_NAME}"
+  fi
 
   if [[ "${CREATE_APP}" == 'true' ]]; then
     echo " - Application Secret key: ${application_key_value}"
