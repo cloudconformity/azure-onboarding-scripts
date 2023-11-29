@@ -54,9 +54,9 @@ You can opt to apply the Custom role along with the built-in "Reader" role to al
 
 _Note: Subscription id is required in the case of applying roles to one single subscription._
 
-### Tenant scope custom role
+### Tenant scope custom role (Optional)
 
-
+You can opt to apply the Tenant scope Custom role to the service principal. Please ensure you have access to the tenant root group.
 
 ## Running the script
 ### Azure Portal Cloud Shell (Bash)
