@@ -130,9 +130,6 @@ generate_custom_role_definition() {
 
 generate_tenant_custom_role_definition() {
   local tenant_id="${1}"
-  local assignable_scopes
-
-  assignable_scopes=$(array_join , "${tenant_id}")
 
   echo "{ \
       \"Name\": \"${TENANT_CUSTOM_ROLE_NAME}\", \
@@ -142,7 +139,7 @@ generate_tenant_custom_role_definition() {
       ], \
       \"DataActions\": [], \
       \"NotDataActions\": [], \
-      \"AssignableScopes\": [${assignable_scopes}] \
+      \"AssignableScopes\": [\"/providers/Microsoft.Management/managementGroups/${tenant_id}\"] \
     }"
 }
 
@@ -221,9 +218,9 @@ apply_roles_to_subscription() {
   local is_custom_role_assigned
   local is_reader_role_assigned
 
-  echo "- Subscription: ${subscription_id}"
+  echo " - Subscription: ${subscription_id}"
 
-  echo "  - Checking custom role assignment..."
+  echo " - Checking custom role assignment..."
 
   is_custom_role_assigned=$(az role assignment list \
     --role "${custom_role_definition_id}" \
@@ -233,7 +230,7 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_custom_role_assigned}" ]] || [[ "${is_custom_role_assigned}" == "null" ]]; then
-    echo "  - Assigning custom role..."
+    echo " - Assigning custom role..."
 
     az role assignment create \
       --role "${custom_role_definition_id}" \
@@ -241,9 +238,9 @@ apply_roles_to_subscription() {
       --subscription "${subscription_id}" >/dev/null
   fi
 
-  echo "  - Custom role assigned"
+  echo " - Custom role assigned"
 
-  echo "  - Checking built-in \"Reader\" role assignment..."
+  echo " - Checking built-in \"Reader\" role assignment..."
 
   # retrieve built-in "Reader" role
   reader_role_id=$(az role definition list --name Reader --query "[0].name" --output tsv)
@@ -257,41 +254,41 @@ apply_roles_to_subscription() {
     --output tsv)
 
   if [[ -z "${is_reader_role_assigned}" ]] || [[ "${is_reader_role_assigned}" == "null" ]]; then
-    echo "  - Assigning built-in \"Reader\" role..."
+    echo " - Assigning built-in \"Reader\" role..."
     az role assignment create \
       --role Reader \
       --assignee "${service_principal_id}" \
       --subscription "${subscription_id}" >/dev/null
   fi
 
-  echo "  - \"Reader\" role assigned"
+  echo " - \"Reader\" role assigned"
 }
 
-apply_tenant_custom_role_to_tenant() {
+apply_tenant_custom_role_to_service_principal() {
   local tenant_id="${1}"
   local is_tenant_custom_role_assigned
 
-  echo "- Tenant: ${tenant_id}"
+  echo " - Tenant: ${tenant_id}"
 
-  echo "  - Checking tenant scope custom role assignment..."
+  echo " - Checking tenant scope custom role assignment..."
 
   is_tenant_custom_role_assigned=$(az role assignment list \
     --role "${tenant_custom_role_definition_id}" \
-    --scope "${tenant_id}" \
+    --scope "/providers/Microsoft.Management/managementGroups/${tenant_id}" \
     --assignee "${service_principal_id}" \
     --query "[0].id" \
     --output tsv)
 
   if [[ -z "${is_tenant_custom_role_assigned}" ]] || [[ "${is_tenant_custom_role_assigned}" == "null" ]]; then
-    echo "  - Assigning tenant scope custom role..."
+    echo " - Assigning tenant scope custom role..."
 
     az role assignment create \
       --role "${tenant_custom_role_definition_id}" \
       --assignee "${service_principal_id}" \
-      --scope "${tenant_id}" >/dev/null
+      --scope "/providers/Microsoft.Management/managementGroups/${tenant_id}" >/dev/null
   fi
 
-  echo "  - Tenant scope Custom role assigned"
+  echo " - Tenant scope Custom role assigned"
 }
 
 main() {
@@ -349,7 +346,7 @@ main() {
       UPDATE_ROLE='true'
       ;;
     [nN] | [nN][oO])
-      echo "Custom role \"${CUSTOM_ROLE_NAME}\" will not be applied to new subscriptions."
+      echo "Custom role \"${CUSTOM_ROLE_NAME}\" will not have assignable scopes extended to new subscriptions."
       ;;
     *)
       option_error_and_exit
@@ -397,7 +394,7 @@ main() {
   read -rp "Would you like to apply \"${TENANT_CUSTOM_ROLE_NAME}\" to tenant scope [Y|N]? " answer
   case "${answer}" in
   [yY] | [yY][eE][sS])
-    UPDATE_TENANT_ROLE='true'
+    UPSERT_TENANT_ROLE='true'
     echo "\"${TENANT_CUSTOM_ROLE_NAME}\" will be applied to the root tenant."
     ;;
   [nN] | [nN][oO])
@@ -449,17 +446,21 @@ main() {
   # retrieve Service principal id
   service_principal_id=$(az ad sp show --id "${application_id}" --query "id" --output tsv)
 
+  readonly APPLY_ROLE
+
   if [[ "${APPLY_ROLE}" == 'true' ]] && [[ -n "${subscription_id}" ]]; then
     echo "Assigning roles to subscription:"
     # A subscription id was passed in so only apply to that subscription
     apply_roles_to_subscription "${subscription_id}" "${service_principal_id}"
-  else
+  elif [[ "${APPLY_ROLE}" == 'true' ]]; then
     # Apply to all subscriptions in Active Directory
     echo "Assigning roles to ${#subscription_ids_in_active_directory[@]} subscriptions:"
     for subscription in "${subscription_ids_in_active_directory[@]}"; do
       apply_roles_to_subscription "${subscription}" "${service_principal_id}"
     done
   fi
+
+  readonly UPSERT_TENANT_ROLE
 
   if [[ "${UPSERT_TENANT_ROLE}" == 'true' ]]; then
     echo "Configuring custom \"${TENANT_CUSTOM_ROLE_NAME}\" role definition:"
