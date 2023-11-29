@@ -273,7 +273,7 @@ apply_tenant_custom_role_to_service_principal() {
   echo "   - Checking tenant scope custom role assignment..."
 
   is_tenant_custom_role_assigned=$(az role assignment list \
-    --role "${tenant_custom_role_definition_id}" \
+    --role "${TENANT_CUSTOM_ROLE_NAME}" \
     --scope "/providers/Microsoft.Management/managementGroups/${tenant_id}" \
     --assignee "${service_principal_id}" \
     --query "[0].id" \
@@ -471,6 +471,8 @@ main() {
     if [[ -z "${tenant_custom_role_definition_id}" ]] || [[ "${tenant_custom_role_definition_id}" == "null" ]]; then
       echo " - Tenant scope Custom role definition not found"
       create_tenant_custom_role "${tenant_id}"
+    else
+      echo " - Existing Tenant scope Custom role definition found (${tenant_custom_role_definition_id})"
     fi
 
     # Assing tenant scope custom role to service principal id
