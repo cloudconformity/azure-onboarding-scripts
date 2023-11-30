@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="G-52NJxbEr8WPBsjlfdG" name="Page-1">
-        <mxGraphModel dx="2063" dy="923" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1600" math="0" shadow="0">
+        <mxGraphModel dx="1963" dy="923" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1600" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -204,12 +204,12 @@
                 <mxCell id="75" value="&lt;div&gt;custom_role_definition_id&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="515" y="1350" width="80" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="84" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="90" target="83" edge="1">
+                <mxCell id="84" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="90" target="97" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="660" y="1540" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="85" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="80" target="83" edge="1">
+                <mxCell id="85" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="80" target="97" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="80" value="&lt;div&gt;Existing custom role definition found (${custom_role_definition_id}&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -219,7 +219,7 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="83" value="&lt;div&gt;subscription_id&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="510" y="1568" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="515" y="1660" width="80" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="86" value="&lt;meta charset=&quot;utf-8&quot;&gt;&lt;span style=&quot;color: rgb(240, 240, 240); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(42, 37, 47); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;create_app_registration&lt;/span&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
                     <mxGeometry x="-5" y="500" width="120" height="60" as="geometry"/>
@@ -236,10 +236,10 @@
                 <mxCell id="94" value="loop through all subscriptions if not specified" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="92" target="92" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="550" y="1760"/>
-                            <mxPoint x="760" y="1760"/>
-                            <mxPoint x="760" y="1660"/>
-                            <mxPoint x="550" y="1660"/>
+                            <mxPoint x="555" y="1852"/>
+                            <mxPoint x="765" y="1852"/>
+                            <mxPoint x="765" y="1752"/>
+                            <mxPoint x="555" y="1752"/>
                         </Array>
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -248,10 +248,16 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="92" value="&lt;div&gt;apply_roles_to_subscription&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="1680" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="495" y="1772" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="95" value="Finished" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="1784" width="120" height="80" as="geometry"/>
+                    <mxGeometry x="495" y="1876" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="97" target="83">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="&lt;div&gt;service_principal_id&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="495" y="1568" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

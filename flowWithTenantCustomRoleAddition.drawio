@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="G-52NJxbEr8WPBsjlfdG" name="Page-1">
-        <mxGraphModel dx="1836" dy="2589" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1600" math="0" shadow="0">
+        <mxGraphModel dx="2249" dy="2754" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1600" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -95,16 +95,6 @@
                 <mxCell id="32" value="&lt;div&gt;Would you like to add new subscriptions to the assignable scopes of the custom role [Y|N]? &quot;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="400" y="490" width="80" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="61" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="98" target="88" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="322" y="1150"/>
-                            <mxPoint x="440" y="1150"/>
-                        </Array>
-                        <mxPoint x="440" y="1190" as="targetPoint"/>
-                        <mxPoint x="322.5" y="680" as="sourcePoint"/>
-                    </mxGeometry>
-                </mxCell>
                 <mxCell id="43" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="99" target="45" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="440" y="760" as="targetPoint"/>
@@ -117,79 +107,37 @@
                         <mxPoint x="55" y="680" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="49" value="Y" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="45" target="47" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="50" value="N" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#00CC00;" parent="1" source="45" target="100" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="45" value="&lt;div&gt;Would you like to apply \&quot;${CUSTOM_ROLE_NAME}\&quot; to a all subscriptions [Y|N]?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="517.5" y="751" width="80" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="60" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="47" target="88" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="440" y="1280" as="targetPoint"/>
+                <mxCell id="129" value="Y" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontColor=#00CC00;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="45" target="133">
+                    <mxGeometry x="0.3766" relative="1" as="geometry">
+                        <mxPoint x="760" y="923.0000000000005" as="targetPoint"/>
+                        <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="47" value="\&quot;${CUSTOM_ROLE_NAME}\&quot; will be applied to all subscriptions.&lt;br&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = true&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="335" y="1055" width="210" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="54" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="48" target="53" edge="1">
+                <mxCell id="143" value="N" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="45" target="142">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="48" value="&lt;div&gt;Please type in the subscription id&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="657.5" y="854" width="80" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="59" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="51" target="88" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="370" y="1240" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="698" y="1150"/>
-                            <mxPoint x="440" y="1150"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="51" value="&lt;div&gt;&amp;nbsp; Subscription \&quot;${subscription_name}\&quot; found.&lt;/div&gt;&lt;div&gt;subscription_id&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 204, 0);&quot;&gt;APPLY_ROLE = true&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="570" y="1055" width="255" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="55" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="53" target="48" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="850" y="992"/>
-                            <mxPoint x="850" y="894"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="56" value="&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Subscription wasn't found. &lt;br&gt;Please type in the correct subscription id.&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="55" vertex="1" connectable="0">
-                    <mxGeometry x="0.0095" y="1" relative="1" as="geometry">
-                        <mxPoint x="21" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="57" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="53" target="51" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="53" value="&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; subscription_name=$(az account list --query &quot;[? id == '$subscription_id'].name&quot; --output tsv)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="657.5" y="952" width="80" height="80" as="geometry"/>
+                <mxCell id="45" value="&lt;div&gt;Would you like to apply \&quot;${CUSTOM_ROLE_NAME}\&quot; to all subscriptions [Y|N]?&amp;nbsp;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="800" width="80" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="65" value="true" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="62" target="69" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="322.5" y="1350" as="targetPoint"/>
+                        <mxPoint x="190" y="1833" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="74" value="false" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="62" target="75" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="440.25" y="1587" as="targetPoint"/>
+                        <mxPoint x="307.75" y="2070" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="62" value="&lt;div&gt;UPDATE_ROLE&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="1273" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="267.5" y="1756" width="80" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="69" value="update_custom_role" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="262.5" y="1357" width="120" height="80" as="geometry"/>
+                    <mxGeometry x="40" y="1836" width="120" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="79" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="75" target="90" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="660" y="1467.0000000000002" as="targetPoint"/>
+                        <mxPoint x="527.5" y="1950.0000000000002" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="82" value="Custom role definition not found" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="79" vertex="1" connectable="0">
@@ -201,32 +149,29 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="75" value="&lt;div&gt;custom_role_definition_id&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="510" y="1345.5" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="377.5" y="1828.5" width="80" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="84" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="90" target="83" edge="1">
+                <mxCell id="84" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="90" target="151" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="660" y="1655.5" as="sourcePoint"/>
+                        <mxPoint x="527.5" y="2138.5" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="85" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="80" target="83" edge="1">
+                <mxCell id="85" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="80" target="151" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="80" value="&lt;div&gt;Existing custom role definition found (${custom_role_definition_id}&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="354.5" y="1456" width="178" height="60" as="geometry"/>
+                    <mxGeometry x="222" y="1939" width="178" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="93" value="true" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#00CC00;" parent="1" source="83" target="92" edge="1">
                     <mxGeometry x="-0.2941" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="116" value="false" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#00CC00;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="83" target="106" edge="1">
-                    <mxGeometry x="-0.0606" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                        <mxPoint x="550" y="1835.5" as="targetPoint"/>
-                    </mxGeometry>
+                <mxCell id="154" value="false" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="83" target="114">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="83" value="&lt;div&gt;subscription_id&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 204, 0);&quot;&gt;&amp;amp;&amp;amp; APPLY_ROLE&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="510" y="1585.5" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="580" y="2160" width="80" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="86" value="&lt;meta charset=&quot;utf-8&quot;&gt;&lt;span style=&quot;color: rgb(240, 240, 240); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(42, 37, 47); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;create_app_registration&lt;/span&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
                     <mxGeometry x="-5" y="500" width="120" height="60" as="geometry"/>
@@ -235,18 +180,18 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="88" value="&lt;div&gt;&amp;nbsp; check_for_custom_role_availability&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-                    <mxGeometry x="380" y="1187" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="247.5" y="1670" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="90" value="&lt;div&gt;create_custom_role&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-                    <mxGeometry x="595" y="1456" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="462.5" y="1939" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="94" value="loop through all subscriptions if not specified" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="92" target="92" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="700" y="1765.5"/>
-                            <mxPoint x="910" y="1765.5"/>
-                            <mxPoint x="910" y="1625.5"/>
-                            <mxPoint x="700" y="1625.5"/>
+                            <mxPoint x="770" y="2340"/>
+                            <mxPoint x="980" y="2340"/>
+                            <mxPoint x="980" y="2200"/>
+                            <mxPoint x="770" y="2200"/>
                         </Array>
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -254,43 +199,36 @@
                 <mxCell id="96" value="false" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;fontColor=#00CC00;" parent="1" source="114" target="95" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
+                <mxCell id="155" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="92" target="114">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="770" y="2340"/>
+                            <mxPoint x="620" y="2340"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
                 <mxCell id="92" value="&lt;div&gt;apply_roles_to_subscription&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="1665.5" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="710" y="2240" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="95" value="Finished" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="2390" width="120" height="80" as="geometry"/>
+                    <mxGeometry x="560" y="2750" width="120" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="97" value="main()&lt;br&gt;CREATE_APP = true&lt;br&gt;UPDATE_ROLE = false&lt;br&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = false&lt;br&gt;&lt;/font&gt;&lt;div style=&quot;background-color: rgb(31, 31, 31); line-height: 18px;&quot;&gt;&lt;font style=&quot;&quot; color=&quot;#00cc00&quot;&gt;UPSERT_TENANT_ROLE = false&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-150" y="620" width="280" height="90" as="geometry"/>
                 </mxCell>
+                <mxCell id="148" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="98" target="147">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="307" y="1500"/>
+                            <mxPoint x="620" y="1500"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
                 <mxCell id="98" value="main()&lt;br&gt;CREATE_APP = false&lt;br&gt;UPDATE_ROLE = true&lt;br&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = false&lt;br&gt;&lt;/font&gt;&lt;div style=&quot;background-color: rgb(31, 31, 31); line-height: 18px;&quot;&gt;&lt;font style=&quot;&quot; color=&quot;#00cc00&quot;&gt;UPSERT_TENANT_ROLE = false&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="182.5" y="620" width="280" height="90" as="geometry"/>
+                    <mxGeometry x="166.5" y="620" width="280" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="99" value="main()&lt;br&gt;CREATE_APP = false&lt;br&gt;UPDATE_ROLE = false&lt;br&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = false&lt;br&gt;&lt;/font&gt;&lt;div style=&quot;background-color: rgb(31, 31, 31); line-height: 18px;&quot;&gt;&lt;font style=&quot;&quot; color=&quot;#00cc00&quot;&gt;UPSERT_TENANT_ROLE = false&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="480" y="620" width="280" height="90" as="geometry"/>
-                </mxCell>
-                <mxCell id="102" value="Y" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="100" target="48" edge="1">
-                    <mxGeometry x="0.0058" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="104" value="N" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="100" target="103" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="100" value="&lt;div&gt;Would you like to apply \&quot;${CUSTOM_ROLE_NAME}\&quot; to specific subscription [Y|N]?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="720" y="751" width="80" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="105" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#00CC00;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="103" target="88" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="978" y="1150"/>
-                            <mxPoint x="440" y="1150"/>
-                        </Array>
-                        <mxPoint x="440" y="1210" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="103" value="&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;APPLY_ROLE = false&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="850" y="1055" width="255" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="110" value="Y" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="106" target="108" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -299,38 +237,40 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="106" value="&lt;div&gt;Would you like to apply \&quot;${TENANT_CUSTOM_ROLE_NAME}\&quot; to tenant scope [Y|N]?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="510" y="1790" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="580" y="1310" width="80" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="126" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="108" target="114">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="108" value="\&quot;${TENANT_CUSTOM_ROLE_NAME}\&quot; will be applied to the root tenant.&lt;br&gt;&lt;font&gt;UPDATE_TENANT_ROLE&amp;nbsp;= true&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="250" y="1882" width="280" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="127" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="109" target="114">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="109" value="&lt;div&gt;&lt;/div&gt;\&quot;${TENANT_CUSTOM_ROLE_NAME}\&quot; will not be applied to the root tenant.&lt;br&gt;&lt;font&gt;UPDATE_TENANT_ROLE&lt;/font&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;= false&lt;/span&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="575" y="1882" width="255" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="115" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="92" target="106" edge="1">
+                <mxCell id="126" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="108" target="147">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="700" y="1843.5" as="sourcePoint"/>
-                        <mxPoint x="550" y="1805.5" as="targetPoint"/>
+                        <mxPoint x="620" y="1510" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="700" y="1765"/>
-                            <mxPoint x="550" y="1765"/>
+                            <mxPoint x="460" y="1500"/>
+                            <mxPoint x="620" y="1500"/>
                         </Array>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="108" value="\&quot;${TENANT_CUSTOM_ROLE_NAME}\&quot; will be applied to the root tenant.&lt;br&gt;&lt;font&gt;UPDATE_TENANT_ROLE&amp;nbsp;= true&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="1402" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="127" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="109" target="147">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="620" y="1510" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="772" y="1500"/>
+                            <mxPoint x="620" y="1500"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="109" value="&lt;div&gt;&lt;/div&gt;\&quot;${TENANT_CUSTOM_ROLE_NAME}\&quot; will not be applied to the root tenant.&lt;br&gt;&lt;font&gt;UPDATE_TENANT_ROLE&lt;/font&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;= false&lt;/span&gt;&lt;font&gt;&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
+                    <mxGeometry x="645" y="1402" width="255" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="118" value="Configuring custom \&quot;${TENANT_CUSTOM_ROLE_NAME}\&quot; role definition:" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="114" target="119" edge="1">
                     <mxGeometry x="0.8125" relative="1" as="geometry">
                         <mxPoint as="offset"/>
-                        <mxPoint x="250" y="2090.000000000001" as="targetPoint"/>
+                        <mxPoint x="320" y="2450.000000000001" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="114" value="&lt;div&gt;&lt;/div&gt;&lt;font&gt;UPSERT_TENANT_ROLE&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="510" y="1990" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="580" y="2360" width="80" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="121" value="!tenant_custom_role_definition_id" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="119" target="120" edge="1">
                     <mxGeometry x="0.6914" y="-3" relative="1" as="geometry">
@@ -339,23 +279,92 @@
                 </mxCell>
                 <mxCell id="124" value="tenant_custom_role_definition_id" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Helvetica;fontColor=#00CC00;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="119" target="122" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="250.22222222222217" y="2260.000000000001" as="targetPoint"/>
+                        <mxPoint x="320.2222222222222" y="2620.000000000001" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="119" value="&lt;div&gt;&lt;/div&gt;&lt;span style=&quot;color: rgb(240, 240, 240);&quot;&gt;check_for_tenant_custom_role_availability&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#FFFFFF;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="210" y="2080" width="80" height="80" as="geometry"/>
+                    <mxGeometry x="280" y="2440" width="80" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="123" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="120" target="122" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="120" value="&lt;div&gt;create_tenant_custom_role&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="2170" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="100" y="2530" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="125" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#00CC00;" parent="1" source="122" target="95" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="122" value="&lt;div&gt;apply_tenant_custom_role_to_service_principal&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="1" vertex="1">
-                    <mxGeometry x="190" y="2270" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="260" y="2630" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="131" value="Y" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="133" target="134">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="132" value="N" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="133" target="136">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="133" value="&lt;div&gt;Would you like to apply \&quot;${CUSTOM_ROLE_NAME}\&quot; to a all subscriptions [Y|N]?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="722.5" y="892" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="145" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="134" target="106">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="134" value="\&quot;${CUSTOM_ROLE_NAME}\&quot; will be applied to all subscriptions.&lt;br&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = true&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="515" y="1180" width="210" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="135" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="136" target="141">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="136" value="&lt;div&gt;Please type in the subscription id&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="845" y="972" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="146" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="137" target="106">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="137" value="&lt;div&gt;&amp;nbsp; Subscription \&quot;${subscription_name}\&quot; found.&lt;/div&gt;&lt;div&gt;subscription_id&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = true&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="757.5" y="1180" width="255" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="138" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="141" target="136">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1065" y="1117"/>
+                            <mxPoint x="1065" y="1012"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="139" value="&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Subscription wasn't found. &lt;br&gt;Please type in the correct subscription id.&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="138">
+                    <mxGeometry x="0.0095" y="1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="140" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="141" target="137">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="141" value="&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; subscription_name=$(az account list --query &quot;[? id == '$subscription_id'].name&quot; --output tsv)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="845" y="1077" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="144" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="142" target="106">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="640" y="1310" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="142" value="\&quot;${CUSTOM_ROLE_NAME}\&quot; will not be applied to subscriptions.&lt;br&gt;&lt;font color=&quot;#00cc00&quot;&gt;APPLY_ROLE = false&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="1180" width="210" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="149" value="true" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="147" target="88">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="152" value="false" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="147" target="151">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="147" value="&lt;div&gt;UPDATE_ROLE || APPLY_ROLE&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="1530" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="153" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FFFFFF;fontColor=#00CC00;" edge="1" parent="1" source="151" target="83">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="&lt;div&gt;service_principal_id&lt;br&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="560" y="2070" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
