@@ -235,7 +235,7 @@ apply_roles_to_subscription() {
     az role assignment create \
       --role "${custom_role_definition_id}" \
       --assignee "${service_principal_id}" \
-      --subscription "${subscription_id}" >/dev/null
+      --scope "/subscriptions/${subscription_id}" >/dev/null
   fi
 
   echo "   - Custom role assigned"
@@ -258,7 +258,7 @@ apply_roles_to_subscription() {
     az role assignment create \
       --role Reader \
       --assignee "${service_principal_id}" \
-      --subscription "${subscription_id}" >/dev/null
+      --scope "/subscriptions/${subscription_id}" >/dev/null
   fi
 
   echo "   - \"Reader\" role assigned"
