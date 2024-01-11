@@ -11,8 +11,6 @@ This script creates a new Custom role "Custom Role - Cloud One Conformity" withi
 This new Custom role along with the built-in "Reader" role will be applied to either all the Subscriptions in the
 Active Directory or just the subscription that is specified.
 
-There is an additional "Custom Role - Cloud One Conformity (Tenant scope)" that is optional.
-
 The script can also create a new App Registration to apply these permissions which can be used to allow Conformity to access to your Azure instance.
 
 ### Minimum Azure CLI version
@@ -53,10 +51,6 @@ _Note: This will only update the role assignable scopes and not attempt to assig
 You can opt to apply the Custom role along with the built-in "Reader" role to all subscriptions or to just one single subscription.
 
 _Note: Subscription id is required in the case of applying roles to one single subscription._
-
-### Tenant scope custom role (Optional)
-
-You can opt to apply the Tenant scope Custom role to the service principal. Please ensure you have access to the tenant root group.
 
 ## Running the script
 ### Azure Portal Cloud Shell (Bash)
@@ -103,7 +97,7 @@ the changes to be reflected in the Azure system.
 
     When running the script against all subscriptions in the Active Directory if there is a subscription which the user running
     the script doesn't have permissions to apply the roles to, the script will fail. Any subscriptions that were processed before
-    this subscription will have the roles applied. This applies to the tenant custom role as well.
+    this subscription will have the roles applied.
 
 ## Contributing
 
