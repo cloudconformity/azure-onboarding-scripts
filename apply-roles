@@ -119,8 +119,7 @@ generate_custom_role_definition() {
       \"Actions\": [ \
           \"Microsoft.AppConfiguration/configurationStores/ListKeyValue/action\", \
           \"Microsoft.Network/networkWatchers/queryFlowLogStatus/action\", \
-          \"Microsoft.Web/sites/config/list/Action\", \
-          \"Microsoft.Storage/storageAccounts/queueServices/queues/read\" \
+          \"Microsoft.Web/sites/config/list/Action\" \
       ], \
       \"DataActions\": [], \
       \"NotDataActions\": [], \
