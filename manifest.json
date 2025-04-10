@@ -11,11 +11,19 @@
         "type": "Scope"
       },
       {
+        "id": "572fea84-0151-49b2-9301-11cb16974376",
+        "type": "Scope"
+      },
+      {
         "id": "7ab1d382-f21e-4acd-a863-ba3e13f7da61",
         "type": "Role"
       },
       {
         "id": "df021288-bdef-4463-88db-98f22de89214",
+        "type": "Role"
+      },
+      {
+        "id": "246dd0d5-5bd0-4def-940b-0421030a5b68",
         "type": "Role"
       }
     ]
