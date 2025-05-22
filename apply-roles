@@ -121,7 +121,10 @@ generate_custom_role_definition() {
           \"Microsoft.Network/networkWatchers/queryFlowLogStatus/action\", \
           \"Microsoft.Web/sites/config/list/Action\" \
       ], \
-      \"DataActions\": [], \
+      \"DataActions\": [ \
+          \"Microsoft.KeyVault/vaults/keys/read\", \
+          \"Microsoft.KeyVault/vaults/secrets/readMetadata/action\", \
+      ], \
       \"NotDataActions\": [], \
       \"AssignableScopes\": [${assignable_scopes}] \
     }"
